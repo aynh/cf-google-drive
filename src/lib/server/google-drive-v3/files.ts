@@ -1,4 +1,4 @@
-import { URLSearchParamsFromObject } from './util';
+import { fetchWithToken, urlWithQuery } from './util';
 import { GoogleDriveV3Error } from './error';
 
 export const GOOGLE_DRIVE_V3_FOLDER_MIME = 'application/vnd.google-apps.folder';
@@ -70,23 +70,18 @@ export interface ListResponse {
 }
 
 export const download = async (token: string, id: string): Promise<ReadableStream> => {
-	const parameters: FilesParameters = {
+	const parameters = {
 		supportsAllDrives: true
-	};
+	} satisfies FilesParameters;
 
-	const search = URLSearchParamsFromObject({ ...parameters });
-	// from https://developers.google.com/drive/api/v3/reference/files/get#response:
-	// If you provide the URL parameter alt=media, then the response includes the file contents in the response body.
-	search.append('alt', 'media');
-
-	const url = new URL(GOOGLE_DRIVE_V3_FILES_URL + id);
-	url.search = search.toString();
-
-	const response = await fetch(url.toString(), {
-		headers: {
-			Authorization: `Bearer ${token}`
-		}
+	const url = urlWithQuery(GOOGLE_DRIVE_V3_FILES_URL + id, {
+		...parameters,
+		// from https://developers.google.com/drive/api/v3/reference/files/get#response:
+		// If you provide the URL parameter alt=media, then the response includes the file contents in the response body.
+		alt: 'media'
 	});
+
+	const response = await fetchWithToken(url, token);
 
 	if (!response.ok || response.body == undefined) {
 		throw new GoogleDriveV3Error(await response.json());
@@ -99,20 +94,14 @@ export const download = async (token: string, id: string): Promise<ReadableStrea
 };
 
 export const get = async (token: string, id: string): Promise<FileResource> => {
-	const parameters: FilesParameters = {
+	const parameters = {
 		fields: GOOGLE_DRIVE_V3_FILES_FIELDS,
 		q: 'trashed = false',
 		supportsAllDrives: true
-	};
+	} satisfies FilesParameters;
 
-	const url = new URL(GOOGLE_DRIVE_V3_FILES_URL + id);
-	url.search = URLSearchParamsFromObject({ ...parameters }).toString();
-
-	const response = await fetch(url.toString(), {
-		headers: {
-			Authorization: `Bearer ${token}`
-		}
-	});
+	const url = urlWithQuery(GOOGLE_DRIVE_V3_FILES_URL + id, parameters);
+	const response = await fetchWithToken(url, token);
 
 	if (!response.ok) {
 		throw new GoogleDriveV3Error(await response.json());
@@ -122,28 +111,19 @@ export const get = async (token: string, id: string): Promise<FileResource> => {
 };
 
 export const list = async (token: string, folderId: string): Promise<FileResource[]> => {
-	const parameters: FilesParameters = {
+	const parameters = {
 		fields: `nextPageToken, files(${GOOGLE_DRIVE_V3_FILES_FIELDS})`,
 		q: `trashed = false and '${folderId}' in parents`,
 		includeItemsFromAllDrives: true,
 		pageSize: 1000,
 		supportsAllDrives: true
-	};
+	} satisfies FilesParameters;
 
 	const resources = [] as FileResource[];
 	let pageToken: string | undefined = undefined;
 	do {
-		const search = URLSearchParamsFromObject({ ...parameters });
-		if (pageToken !== undefined) search.append('pageToken', pageToken);
-
-		const url = new URL(GOOGLE_DRIVE_V3_FILES_URL);
-		url.search = search.toString();
-
-		const response = await fetch(url.toString(), {
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		});
+		const url = urlWithQuery(GOOGLE_DRIVE_V3_FILES_URL, { ...parameters, pageToken });
+		const response = await fetchWithToken(url, token);
 
 		if (!response.ok) {
 			throw new GoogleDriveV3Error(await response.json());
