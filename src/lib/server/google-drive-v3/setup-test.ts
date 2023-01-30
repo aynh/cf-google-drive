@@ -11,12 +11,12 @@ beforeAll(async () => {
 		if (typeof import.meta.env[key] !== 'string') throw `${key} is not defined`;
 	}
 
-	accessToken = await fetchAccessToken({
+	folderId = import.meta.env.TEST_FOLDER_ID;
+	({ token: accessToken } = await fetchAccessToken({
 		client_id: import.meta.env.TEST_CLIENT_ID,
 		client_secret: import.meta.env.TEST_CLIENT_SECRET,
 		refresh_token: import.meta.env.TEST_REFRESH_TOKEN
-	});
-	folderId = import.meta.env.TEST_FOLDER_ID;
+	}));
 });
 
 beforeEach((context) => {

@@ -9,11 +9,18 @@ interface FetchAccessTokenParams {
 	refresh_token: string;
 }
 
+export interface AccessToken {
+	/** The access token. */
+	token: string;
+	/** Seconds before the access token expires. */
+	expires: number;
+}
+
 export const fetchAccessToken = async ({
 	client_id,
 	client_secret,
 	refresh_token
-}: FetchAccessTokenParams) => {
+}: FetchAccessTokenParams): Promise<AccessToken> => {
 	const body = new URLSearchParams({
 		client_id,
 		client_secret,
@@ -31,7 +38,12 @@ export const fetchAccessToken = async ({
 		throw new GoogleDriveV3Error(await response.json());
 	}
 
-	return response.json().then(({ access_token }: { access_token: string }) => access_token);
+	return response
+		.json()
+		.then(({ access_token, expires_in }: { access_token: string; expires_in: number }) => ({
+			token: access_token,
+			expires: expires_in
+		}));
 };
 
 if (import.meta.vitest) {
