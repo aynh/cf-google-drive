@@ -27,8 +27,8 @@ export const handle = (async ({ event, resolve }) => {
 		if (value === undefined) throw error(404);
 		else if (value.mimeType !== GOOGLE_DRIVE_V3_FOLDER_MIME) {
 			// return the file if current path is not a folder
-			const readable = await download(event.locals.accessToken, value.id);
-			return new Response(readable, { headers: { 'Content-Type': value.mimeType } });
+			const { readable, headers } = await download(event.locals.accessToken, value.id);
+			return new Response(readable, { headers });
 		}
 
 		event.locals.resolved = value;

@@ -55,6 +55,11 @@ export interface FileResource {
 	size?: number;
 }
 
+export interface DownloadResponse {
+	readable: ReadableStream<Uint8Array>;
+	headers: Record<'content-length' | 'content-type', string>;
+}
+
 export interface ListResponse {
 	/**
 	 * The page token for the next page of files.
@@ -69,7 +74,7 @@ export interface ListResponse {
 	files: FileResource[];
 }
 
-export const download = async (token: string, id: string): Promise<ReadableStream> => {
+export const download = async (token: string, id: string): Promise<DownloadResponse> => {
 	const parameters = {
 		supportsAllDrives: true
 	} satisfies FilesParameters;
@@ -87,10 +92,16 @@ export const download = async (token: string, id: string): Promise<ReadableStrea
 		throw new GoogleDriveV3Error(await response.json());
 	}
 
-	const { readable, writable } = new TransformStream();
+	const { readable, writable } = new TransformStream<Uint8Array>();
 	response.body.pipeTo(writable);
 
-	return readable;
+	return {
+		readable,
+		headers: {
+			'content-type': response.headers.get('content-type')!,
+			'content-length': response.headers.get('content-length')!
+		}
+	};
 };
 
 export const get = async (token: string, id: string): Promise<FileResource> => {
@@ -168,9 +179,11 @@ if (import.meta.vitest) {
 		});
 
 		it('should download', async ({ accessToken }) => {
-			const stream = await download(accessToken, aTxt!.id);
-			const aTxtBody = await new Response(stream).text();
+			const { readable, headers } = await download(accessToken, aTxt!.id);
+			const aTxtBody = await new Response(readable).text();
 			expect(aTxtBody).toBe('a.txt');
+			expect(headers['content-length']).toBeDefined();
+			expect(headers['content-type']).toBeDefined();
 		});
 	});
 }
