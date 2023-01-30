@@ -40,8 +40,25 @@ export const handle = (async ({ event, resolve: _resolve }) => {
 		if (value === undefined) throw error(404);
 		else if (value.mimeType !== GOOGLE_DRIVE_V3_FOLDER_MIME) {
 			// return the "file" if current path is not a folder
-			const { readable, headers } = await download(token, value.id);
-			return new Response(readable, { headers });
+			let { body, content } = await download(token, value.id);
+
+			let size = Number.parseInt(content.length ?? String(value.size), 10);
+			// if both content.length and value.size is undefined (or invalid)
+			if (Number.isNaN(size)) {
+				// download the whole file as blob
+				const blob = await new Response(body).blob();
+				// re-set the body with the blob stream
+				body = blob.stream();
+				// set the size to the blob size
+				size = blob.size;
+			}
+
+			return new Response(body, {
+				headers: {
+					'content-length': String(size),
+					'content-type': content.type ?? value.mimeType
+				}
+			});
 		}
 
 		event.locals.token = token;
@@ -53,7 +70,7 @@ export const handle = (async ({ event, resolve: _resolve }) => {
 
 		// ignores unknown errors
 		throw error(500);
-	} finally {
-		return _resolve(event);
 	}
+
+	return _resolve(event);
 }) satisfies Handle;

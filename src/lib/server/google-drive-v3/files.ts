@@ -56,8 +56,8 @@ export interface FileResource {
 }
 
 export interface DownloadResponse {
-	readable: ReadableStream<Uint8Array>;
-	headers: Record<'content-length' | 'content-type', string>;
+	body: ReadableStream<Uint8Array>;
+	content: Record<'length' | 'type', string | undefined>;
 }
 
 export interface ListResponse {
@@ -92,14 +92,11 @@ export const download = async (token: string, id: string): Promise<DownloadRespo
 		throw new GoogleDriveV3Error(await response.json());
 	}
 
-	const { readable, writable } = new TransformStream<Uint8Array>();
-	response.body.pipeTo(writable);
-
 	return {
-		readable,
-		headers: {
-			'content-type': response.headers.get('content-type')!,
-			'content-length': response.headers.get('content-length')!
+		body: response.body,
+		content: {
+			type: response.headers.get('content-type') ?? undefined,
+			length: response.headers.get('content-length') ?? undefined
 		}
 	};
 };
@@ -179,11 +176,11 @@ if (import.meta.vitest) {
 		});
 
 		it('should download', async ({ token }) => {
-			const { readable, headers } = await download(token, aTxt!.id);
-			const aTxtBody = await new Response(readable).text();
+			const { body, content } = await download(token, aTxt!.id);
+			const aTxtBody = await new Response(body).text();
 			expect(aTxtBody).toBe('a.txt');
-			expect(headers['content-length']).toBeDefined();
-			expect(headers['content-type']).toBeDefined();
+			// expect(content.length).toBeDefined();
+			expect(content.type).toBeDefined();
 		});
 	});
 }
