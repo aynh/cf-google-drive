@@ -27,9 +27,9 @@ if (import.meta.vitest) {
 		{ path: '/nested/directory' },
 		{ path: '/nested/directory/file.txt' }
 	])('should resolve $path', ({ path }) => {
-		it('should resolve', async ({ accessToken, folderId }) => {
-			const resolved = await resolve(accessToken, folderId, path);
-			expect(resolved).toBeDefined();
+		it('should resolve', async ({ token, folderId }) => {
+			const value = await resolve(token, folderId, path);
+			expect(value).toBeDefined();
 		});
 	});
 }

@@ -49,8 +49,8 @@ export const fetchAccessToken = async ({
 if (import.meta.vitest) {
 	const { expect, it } = import.meta.vitest;
 
-	it('should return an access token', async ({ accessToken }) => {
+	it('should return a token', async ({ token }) => {
 		// set in setup-test.ts
-		expect(accessToken).toBeDefined();
+		expect(token).toBeDefined();
 	});
 }

@@ -155,8 +155,8 @@ if (import.meta.vitest) {
 	describe('files methods', () => {
 		let aTxt: FileResource | undefined = undefined;
 
-		it('should list', async ({ accessToken, folderId }) => {
-			const listResults = await list(accessToken, folderId);
+		it('should list', async ({ token, folderId }) => {
+			const listResults = await list(token, folderId);
 
 			expect(listResults).toHaveLength(4);
 
@@ -173,13 +173,13 @@ if (import.meta.vitest) {
 			aTxt = listResults.find(({ name }) => name === 'a.txt')!;
 		});
 
-		it('should get', async ({ accessToken }) => {
-			const getResult = await get(accessToken, aTxt!.id);
+		it('should get', async ({ token }) => {
+			const getResult = await get(token, aTxt!.id);
 			expect(getResult).toStrictEqual(aTxt);
 		});
 
-		it('should download', async ({ accessToken }) => {
-			const { readable, headers } = await download(accessToken, aTxt!.id);
+		it('should download', async ({ token }) => {
+			const { readable, headers } = await download(token, aTxt!.id);
 			const aTxtBody = await new Response(readable).text();
 			expect(aTxtBody).toBe('a.txt');
 			expect(headers['content-length']).toBeDefined();

@@ -8,8 +8,8 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			accessToken: string;
-			resolved: FileResource;
+			token: string;
+			pathValue: FileResource;
 		}
 		// interface PageData {}
 		interface Platform {

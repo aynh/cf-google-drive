@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach } from 'vitest';
 import { fetchAccessToken } from './oauth';
 
-let accessToken = '';
+let token = '';
 let folderId = '';
 
 beforeAll(async () => {
@@ -12,7 +12,7 @@ beforeAll(async () => {
 	}
 
 	folderId = import.meta.env.TEST_FOLDER_ID;
-	({ token: accessToken } = await fetchAccessToken({
+	({ token } = await fetchAccessToken({
 		client_id: import.meta.env.TEST_CLIENT_ID,
 		client_secret: import.meta.env.TEST_CLIENT_SECRET,
 		refresh_token: import.meta.env.TEST_REFRESH_TOKEN
@@ -20,11 +20,11 @@ beforeAll(async () => {
 });
 
 beforeEach((context) => {
-	context.accessToken = accessToken;
+	context.token = token;
 	context.folderId = folderId;
 });
 
 afterAll(() => {
-	accessToken = '';
+	token = '';
 	folderId = '';
 });

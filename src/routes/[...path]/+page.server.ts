@@ -6,11 +6,12 @@ import type { PageServerLoad } from './$types';
 export const load = (async ({ locals, depends, url }) => {
 	const { pathname } = url;
 	const parent = pathname.split('/').slice(0, -1).join('/') || '/'; // set parent to / if it's empty
-	const _path = pathname.endsWith('/') ? pathname : `${pathname}/`; // ensure path always ends with a /
-	const title = `Index of ${_path}`;
+	const path = pathname.endsWith('/') ? pathname : `${pathname}/`; // ensure path always ends with a /
+	const title = `Index of ${path}`;
 
-	depends(`route:${_path}`);
+	depends(`route:${path}`);
 	try {
+		// Formats date into something like "29 Jan 2023, 19:51"
 		const { format } = new Intl.DateTimeFormat('en-GB', {
 			day: 'numeric',
 			month: 'short',
@@ -18,16 +19,17 @@ export const load = (async ({ locals, depends, url }) => {
 			hour: '2-digit',
 			minute: '2-digit'
 		});
-		const items = await list(locals.accessToken, locals.resolved.id).then((it) =>
+		const items = await list(locals.token, locals.pathValue.id).then((it) =>
 			it.map(({ mimeType, modifiedTime, size, name: _name }) => {
-				const path = `${_path}${_name}`;
+				const _path = `${path}${_name}`;
 
 				const folder = mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME;
 				const name = folder ? `${_name}/` : _name;
 
+				// Turns "29 Jan 2023, 19:51" into "29-Jan-2023 19:51"
 				const modified = format(new Date(modifiedTime)).replaceAll(' ', '-').replace(',-', ' ');
 
-				return { folder, name, modified, path, size };
+				return { folder, name, modified, path: _path, size };
 			})
 		);
 

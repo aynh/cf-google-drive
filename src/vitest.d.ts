@@ -1,6 +1,6 @@
 declare module '@vitest/runner' {
 	export interface TestContext {
-		accessToken: string;
+		token: string;
 		folderId: string;
 	}
 }
