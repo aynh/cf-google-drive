@@ -1,13 +1,9 @@
 import { error, type Handle } from '@sveltejs/kit';
-import {
-	APP_CLIENT_ID,
-	APP_CLIENT_SECRET,
-	APP_FOLDER_ID,
-	APP_REFRESH_TOKEN
-} from '$env/static/private';
+import { env } from '$env/dynamic/private';
+import { APP_CLIENT_ID, APP_CLIENT_SECRET, APP_REFRESH_TOKEN } from '$env/static/private';
 import { resolve } from '$lib/server/google-drive-v3/';
 import { fetchAccessToken } from '$lib/server/google-drive-v3/oauth';
-import { download, GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
+import { download, get, GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
 import { GoogleDriveV3Error } from '$lib/server/google-drive-v3/error';
 
 const TOKEN_KV_KEY = '__access_token';
@@ -38,7 +34,8 @@ export const handle = (async ({ event, resolve: _resolve }) => {
 		// making sure path doesn't ends with / as it wiil
 		// prevent _resolve here from working correctly
 		const path = event.url.pathname.replace(/\/$/, '');
-		const value = await resolve(token, APP_FOLDER_ID, path);
+		const root = env.APP_FOLDER_ID ?? (await get(token, 'root')).id;
+		const value = await resolve(token, root, path);
 
 		if (value === undefined) throw error(404);
 		else if (value.mimeType !== GOOGLE_DRIVE_V3_FOLDER_MIME) {
