@@ -9,9 +9,16 @@
 
 	export let data: Data;
 	$: reload = data.folder ? undefined : ('' as const);
-	$: paddedModified = data.modified.padStart(68 - data.name.length);
-	$: paddedSize = String(data.size ?? '-').padStart(20);
-	$: details = `${paddedModified}${paddedSize}`;
+	$: size = String(data.size ?? '-').padStart(20);
+	$: details = `${data.modified}${size}`;
 </script>
 
-<a href={data.path} data-sveltekit-reload={reload}>{data.name}</a>{details}
+<span><a href={data.path} data-sveltekit-reload={reload}>{data.name}</a>{details}</span>
+
+<style>
+	span {
+		display: inline flex;
+		justify-content: space-between;
+		width: 100%;
+	}
+</style>
