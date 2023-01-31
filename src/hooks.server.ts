@@ -8,7 +8,7 @@ import { GoogleDriveV3Error } from '$lib/server/google-drive-v3/error';
 
 const TOKEN_KV_KEY = '__access_token';
 
-export const handle = (async ({ event, resolve: _resolve }) => {
+export const handle = (async ({ event, resolve: resolve_ }) => {
 	try {
 		const KV = event.platform?.env?.TOKEN_STORE;
 
@@ -18,21 +18,21 @@ export const handle = (async ({ event, resolve: _resolve }) => {
 		}
 
 		if (token === undefined) {
-			const { expires, token: _token } = await fetchAccessToken({
+			const { expires, token: token_ } = await fetchAccessToken({
 				client_id: APP_CLIENT_ID,
 				client_secret: APP_CLIENT_SECRET,
 				refresh_token: APP_REFRESH_TOKEN
 			});
 
 			if (KV !== undefined) {
-				await KV.put(TOKEN_KV_KEY, _token, { expirationTtl: expires });
+				await KV.put(TOKEN_KV_KEY, token_, { expirationTtl: expires });
 			}
 
-			token = _token;
+			token = token_;
 		}
 
 		// making sure path doesn't ends with / as it wiil
-		// prevent _resolve here from working correctly
+		// prevent resolve here from working correctly
 		const path = event.url.pathname.replace(/\/$/, '');
 		const root = env.APP_FOLDER_ID ?? (await get(token, 'root')).id;
 		const value = await resolve(token, root, path);
@@ -72,5 +72,5 @@ export const handle = (async ({ event, resolve: _resolve }) => {
 		throw error(500);
 	}
 
-	return _resolve(event);
+	return resolve_(event);
 }) satisfies Handle;

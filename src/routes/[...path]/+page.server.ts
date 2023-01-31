@@ -20,16 +20,16 @@ export const load = (async ({ locals, depends, url }) => {
 			minute: '2-digit'
 		});
 		const items = await list(locals.token, locals.pathValue.id).then((it) =>
-			it.map(({ mimeType, modifiedTime, size, name: _name }) => {
-				const _path = `${path}${_name}`;
+			it.map(({ mimeType, modifiedTime, size, name: name_ }) => {
+				const path_ = `${path}${name_}`;
 
 				const folder = mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME;
-				const name = folder ? `${_name}/` : _name;
+				const name = folder ? `${name_}/` : name_;
 
 				// Turns "29 Jan 2023, 19:51" into "29-Jan-2023 19:51"
 				const modified = format(new Date(modifiedTime)).replaceAll(' ', '-').replace(',-', ' ');
 
-				return { folder, name, modified, path: _path, size };
+				return { folder, name, modified, path: path_, size };
 			})
 		);
 
