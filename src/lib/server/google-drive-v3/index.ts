@@ -8,7 +8,7 @@ export const resolve = async (token: string, root: string, path: string) => {
 	while (paths.length > 0) {
 		const resources = await list(token, current?.id ?? root);
 
-		const part = paths.shift()!;
+		const part = decodeURIComponent(paths.shift()!);
 		const match = resources.find(({ name }) => name === part);
 		if (match === undefined || (paths.length > 0 && match.mimeType !== GOOGLE_DRIVE_V3_FOLDER_MIME))
 			return;
