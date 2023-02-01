@@ -39,7 +39,7 @@ export const load = (async ({ locals, depends, url }) => {
 			throw error(500, e.error);
 		}
 
-		// ignores unknown errors
-		throw error(500);
+		// rethrow unknown errors
+		throw e;
 	}
 }) satisfies PageServerLoad;

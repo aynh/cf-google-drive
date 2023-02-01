@@ -67,8 +67,8 @@ export const handle = (async ({ event, resolve: resolve_ }) => {
 			throw error(500, e.error);
 		}
 
-		// ignores unknown errors
-		throw error(500);
+		// rethrow unknown errors
+		throw e;
 	}
 
 	return resolve_(event);
