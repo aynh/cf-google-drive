@@ -6,8 +6,8 @@ export const fetchWithToken = async (
 	fetch(input, {
 		...init,
 		headers: {
-			...init?.headers,
-			Authorization: `Bearer ${token}`
+			...Object.fromEntries(new Headers(init?.headers).entries()),
+			authorization: `Bearer ${token}`
 		}
 	});
 
