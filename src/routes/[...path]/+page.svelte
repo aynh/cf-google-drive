@@ -11,6 +11,8 @@
 
 <h1>{data.title}</h1>
 <hr />
-<pre><a href={data.parent}>../</a>{#each data.items as item}{'\n'}<LinkItem data={item} />{/each}
+<pre style:width="640px"><a href={data.parent}>../</a>{#each data.items as item}{'\n'}<LinkItem
+			data={item}
+		/>{/each}
 </pre>
 <hr />
