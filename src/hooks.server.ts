@@ -31,9 +31,8 @@ export const handle = (async ({ event, resolve: resolve_ }) => {
 			token = token_;
 		}
 
-		// making sure path doesn't ends with / as it wiil
-		// prevent resolve here from working correctly
-		const path = event.url.pathname.replace(/\/$/, '');
+		// decode the path and remove the trailing slash
+		const path = decodeURIComponent(event.url.pathname).replace(/\/$/g, '');
 		const root = env.APP_FOLDER_ID ?? (await get(token, 'root')).id;
 		const value = await resolve(token, root, path);
 
