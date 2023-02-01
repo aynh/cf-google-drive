@@ -44,7 +44,8 @@ export const handleDownload = async (token: string, value: FileResource, range?:
 	const headers = new Headers({
 		'accept-ranges': 'bytes',
 		'content-length': String(size),
-		'content-type': content.type ?? value.mimeType
+		'content-type': content.type ?? value.mimeType,
+		'last-modified': new Date(value.modifiedTime).toUTCString()
 	});
 	if (content.range !== undefined) {
 		headers.set('content-range', content.range);
