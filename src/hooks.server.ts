@@ -1,5 +1,5 @@
 import { error, type Handle } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
+import { APP_FOLDER_ID } from '$env/static/private';
 import { resolve } from '$lib/server/google-drive-v3/';
 import { get, GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
 import { GoogleDriveV3Error } from '$lib/server/google-drive-v3/error';
@@ -11,7 +11,7 @@ export const handle = (async ({ event, resolve: resolve_ }) => {
 
 		// decode the path and remove the trailing slash
 		const path = decodeURIComponent(event.url.pathname).replace(/\/$/g, '');
-		const root = env.APP_FOLDER_ID ?? (await get(token, 'root')).id;
+		const root = APP_FOLDER_ID || (await get(token, 'root')).id;
 		const value = await resolve(token, root, path);
 
 		if (value === undefined) {
