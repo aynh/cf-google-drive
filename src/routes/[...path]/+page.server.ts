@@ -11,7 +11,7 @@ export const load = (async ({ locals, depends, url }) => {
 
 	depends(`route:${path}`);
 	try {
-		// Formats date into something like "29 Jan 2023, 19:51"
+		// Format date into something like "29 Jan 2023, 19:51"
 		const { format } = new Intl.DateTimeFormat('en-GB', {
 			day: 'numeric',
 			month: 'short',
@@ -19,18 +19,19 @@ export const load = (async ({ locals, depends, url }) => {
 			hour: '2-digit',
 			minute: '2-digit'
 		});
-		const items = await list(locals.token, locals.pathValue.id).then((it) =>
-			it.map(({ mimeType, modifiedTime, size, name: name_ }) => {
+		const items = (await list(locals.token, locals.pathValue.id)).map(
+			({ mimeType, modifiedTime, size, name: name_ }) => {
 				const path_ = `${path}${name_}`;
 
 				const folder = mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME;
+				// suffix name with / if it's a folder
 				const name = folder ? `${name_}/` : name_;
 
-				// Turns "29 Jan 2023, 19:51" into "29-Jan-2023 19:51"
+				// Turn "29 Jan 2023, 19:51" into "29-Jan-2023 19:51"
 				const modified = format(new Date(modifiedTime)).replaceAll(' ', '-').replace(',-', ' ');
 
 				return { folder, name, modified, path: path_, size };
-			})
+			}
 		);
 
 		return { items, parent, title };
