@@ -57,7 +57,8 @@ export interface FileResource {
 
 export interface DownloadResponse {
 	body: ReadableStream<Uint8Array>;
-	content: Record<'length' | 'type', string | undefined>;
+	status: number;
+	content: Record<'length' | 'range' | 'type', string | undefined>;
 }
 
 export interface ListResponse {
@@ -74,7 +75,11 @@ export interface ListResponse {
 	files: FileResource[];
 }
 
-export const download = async (token: string, id: string): Promise<DownloadResponse> => {
+export const download = async (
+	token: string,
+	id: string,
+	range?: string
+): Promise<DownloadResponse> => {
 	const parameters = {
 		supportsAllDrives: true
 	} satisfies FilesParameters;
@@ -86,17 +91,26 @@ export const download = async (token: string, id: string): Promise<DownloadRespo
 		alt: 'media'
 	});
 
-	const response = await fetchWithToken(url, token);
+	const headers = new Headers();
+	if (range !== undefined) {
+		headers.set('range', range);
+	}
+
+	const response = await fetchWithToken(url, token, { headers });
 
 	if (!response.ok || response.body == undefined) {
 		throw new GoogleDriveV3Error(await response.json());
 	}
 
+	const contentHeader = (key: string) => response.headers.get(`content-${key}`) ?? undefined;
+
 	return {
 		body: response.body,
+		status: response.status,
 		content: {
-			type: response.headers.get('content-type') ?? undefined,
-			length: response.headers.get('content-length') ?? undefined
+			type: contentHeader('type'),
+			range: contentHeader('range'),
+			length: contentHeader('length')
 		}
 	};
 };
@@ -176,11 +190,27 @@ if (import.meta.vitest) {
 		});
 
 		it('should download', async ({ token }) => {
-			const { body, content } = await download(token, aTxt!.id);
+			const { body, status, content } = await download(token, aTxt!.id);
 			const aTxtBody = await new Response(body).text();
 			expect(aTxtBody).toBe('a.txt');
-			// expect(content.length).toBeDefined();
-			expect(content.type).toBeDefined();
+
+			expect(status).toBe(200);
+
+			expect(content.length).toBe('5');
+			expect(content.type).toBe('text/plain');
+			expect(content.range).toBeUndefined();
+		});
+
+		it('should download in range', async ({ token }) => {
+			const { body, status, content } = await download(token, aTxt!.id, 'bytes=2-5');
+			const aTxtBody = await new Response(body).text();
+			expect(aTxtBody).toBe('txt');
+
+			expect(status).toBe(206);
+
+			expect(content.length).toBe('3');
+			expect(content.type).toBe('text/plain');
+			expect(content.range).toBe('bytes 2-4/5');
 		});
 	});
 }
