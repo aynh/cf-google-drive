@@ -1,29 +1,17 @@
 import { error, type Handle } from '@sveltejs/kit';
-import { APP_FOLDER_ID } from '$env/static/private';
-import { resolve } from '$lib/server/google-drive-v3/';
-import { get, GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
+import { GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
 import { GoogleDriveV3Error } from '$lib/server/google-drive-v3/error';
-import { fetchToken, handleDownload } from '$lib/server';
+import { fetchToken, handleDownload, resolvePathValue } from '$lib/server';
 
-export const handle = (async ({ event, resolve: resolve_ }) => {
+export const handle = (async ({ event, resolve }) => {
 	try {
-		const token = await fetchToken(event.platform?.env?.TOKEN_STORE);
+		event.locals.token = await fetchToken(event);
+		event.locals.pathValue = await resolvePathValue(event);
 
-		// decode the path and remove the trailing slash
-		const path = decodeURIComponent(event.url.pathname).replace(/\/$/g, '');
-		const root = APP_FOLDER_ID || (await get(token, 'root')).id;
-		const value = await resolve(token, root, path);
-
-		if (value === undefined) {
-			throw error(404);
-		} else if (value.mimeType !== GOOGLE_DRIVE_V3_FOLDER_MIME) {
-			const range = event.request.headers.get('range') ?? undefined;
+		if (event.locals.pathValue.mimeType !== GOOGLE_DRIVE_V3_FOLDER_MIME) {
 			// return the "file" if current path is not a folder
-			return handleDownload(token, value, range);
+			return handleDownload(event);
 		}
-
-		event.locals.token = token;
-		event.locals.pathValue = value;
 	} catch (e) {
 		if (e instanceof GoogleDriveV3Error) {
 			throw error(500, e.error);
@@ -33,5 +21,5 @@ export const handle = (async ({ event, resolve: resolve_ }) => {
 		throw e;
 	}
 
-	return resolve_(event);
+	return resolve(event);
 }) satisfies Handle;

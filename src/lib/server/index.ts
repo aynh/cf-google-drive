@@ -1,11 +1,19 @@
-import type { KVNamespace } from '@cloudflare/workers-types';
-import { APP_CLIENT_ID, APP_CLIENT_SECRET, APP_REFRESH_TOKEN } from '$env/static/private';
+import {
+	APP_CLIENT_ID,
+	APP_CLIENT_SECRET,
+	APP_FOLDER_ID,
+	APP_REFRESH_TOKEN
+} from '$env/static/private';
+import { error, type RequestEvent } from '@sveltejs/kit';
 import { fetchAccessToken } from './google-drive-v3/oauth';
-import { download, type FileResource } from './google-drive-v3/files';
+import { download, get } from './google-drive-v3/files';
+import { resolve } from './google-drive-v3';
 
 const TOKEN_KV_KEY = '__access_token';
 
-export const fetchToken = async (KV?: KVNamespace) => {
+export const fetchToken = async ({ platform }: RequestEvent) => {
+	const KV = platform?.env?.TOKEN_STORE;
+
 	if (KV !== undefined) {
 		const token = (await KV.get(TOKEN_KV_KEY)) ?? undefined;
 		if (token !== undefined) {
@@ -26,12 +34,13 @@ export const fetchToken = async (KV?: KVNamespace) => {
 	return token;
 };
 
-export const handleDownload = async (token: string, value: FileResource, range?: string) => {
-	const { content, ...response } = await download(token, value.id, range);
+export const handleDownload = async ({ locals: { pathValue, token }, request }: RequestEvent) => {
+	const range = request.headers.get('range') ?? undefined;
+	const { content, ...response } = await download(token, pathValue.id, range);
 
 	let { body } = response;
-	let size = Number.parseInt(content.length ?? String(value.size), 10);
-	// if both content.length and value.size is undefined (or invalid)
+	let size = Number.parseInt(content.length ?? String(pathValue.size), 10);
+	// if both content.length and pathValue.size is undefined (or invalid)
 	if (Number.isNaN(size)) {
 		// download the whole file as blob
 		const blob = await new Response(body).blob();
@@ -44,12 +53,27 @@ export const handleDownload = async (token: string, value: FileResource, range?:
 	const headers = new Headers({
 		'accept-ranges': 'bytes',
 		'content-length': String(size),
-		'content-type': content.type ?? value.mimeType,
-		'last-modified': new Date(value.modifiedTime).toUTCString()
+		'content-type': content.type ?? pathValue.mimeType,
+		'last-modified': new Date(pathValue.modifiedTime).toUTCString()
 	});
 	if (content.range !== undefined) {
 		headers.set('content-range', content.range);
 	}
 
 	return new Response(body, { status: response.status, headers });
+};
+
+export const resolvePathValue = async ({ url, locals: { token } }: RequestEvent) => {
+	// decode the path and remove trailing slash
+	const path = decodeURIComponent(url.pathname).replace(/\/$/g, '');
+
+	// use APP_FOLDER_ID environment variable OR fallback to root folder id if it's falsy
+	const root = APP_FOLDER_ID || (await get(token, 'root')).id;
+	const resolved = await resolve(token, root, path);
+
+	if (resolved === undefined) {
+		throw error(404);
+	}
+
+	return resolved;
 };
