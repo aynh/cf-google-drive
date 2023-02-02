@@ -21,11 +21,5 @@ export const handle = (async ({ event, resolve }) => {
 		throw e;
 	}
 
-	const response = await resolve(event);
-	response.headers.set(
-		'last-modified',
-		new Date(event.locals.pathValue.modifiedTime).toUTCString()
-	);
-
-	return response;
+	return resolve(event);
 }) satisfies Handle;
