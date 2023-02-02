@@ -20,7 +20,7 @@
 
 <style>
 	span.link {
-		display: inline flex;
+		display: inline-flex;
 		width: 100%;
 	}
 
