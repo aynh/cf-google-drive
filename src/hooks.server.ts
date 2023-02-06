@@ -1,9 +1,19 @@
 import { error, type Handle } from '@sveltejs/kit';
 import { GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
 import { GoogleDriveV3Error } from '$lib/server/google-drive-v3/error';
-import { fetchToken, handleDownload, resolvePathValue } from '$lib/server';
+import {
+	checkBasicAuthentication,
+	fetchToken,
+	handleDownload,
+	resolvePathValue
+} from '$lib/server';
 
 export const handle = (async ({ event, resolve }) => {
+	const authenticationResponse = checkBasicAuthentication(event);
+	if (authenticationResponse !== undefined) {
+		return authenticationResponse;
+	}
+
 	try {
 		event.locals.token = await fetchToken(event);
 		event.locals.pathValue = await resolvePathValue(event);
