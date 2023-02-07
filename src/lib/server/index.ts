@@ -6,8 +6,9 @@ import {
 } from '$env/static/private';
 import { error, type RequestEvent } from '@sveltejs/kit';
 import { fetchAccessToken } from './google-drive-v3/oauth';
-import { download, get } from './google-drive-v3/files';
 import { resolve } from './google-drive-v3';
+import { download } from './google-drive-v3/files/download';
+import { get } from './google-drive-v3/files/get';
 
 const TOKEN_KV_KEY = '__access_token';
 

@@ -1,4 +1,6 @@
-import { get, GOOGLE_DRIVE_V3_FOLDER_MIME, list, type FileResource } from './files';
+import { GOOGLE_DRIVE_V3_FOLDER_MIME, type FileResource } from './files';
+import { get } from './files/get';
+import { list } from './files/list';
 
 export const resolve = async (token: string, root: string, path: string) => {
 	const paths = path.split('/').slice(1);

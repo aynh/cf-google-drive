@@ -1,5 +1,6 @@
 import { GoogleDriveV3Error } from '$lib/server/google-drive-v3/error';
-import { GOOGLE_DRIVE_V3_FOLDER_MIME, list } from '$lib/server/google-drive-v3/files';
+import { GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
+import { list } from '$lib/server/google-drive-v3/files/list';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
