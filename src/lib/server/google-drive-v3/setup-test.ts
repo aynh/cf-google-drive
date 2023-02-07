@@ -4,7 +4,11 @@ import { fetchAccessToken } from './oauth';
 let token = '';
 let folderId = '';
 
-beforeAll(async () => {
+beforeAll(async ({ filepath }) => {
+	if (!filepath?.includes('google-drive-v3')) {
+		return;
+	}
+
 	const keys = ['TEST_CLIENT_ID', 'TEST_CLIENT_SECRET', 'TEST_REFRESH_TOKEN', 'TEST_FOLDER_ID'];
 
 	for (const key of keys) {
