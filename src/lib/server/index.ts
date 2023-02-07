@@ -1,6 +1,4 @@
 import {
-	APP_BASIC_PASSWORD,
-	APP_BASIC_USERNAME,
 	APP_CLIENT_ID,
 	APP_CLIENT_SECRET,
 	APP_FOLDER_ID,
@@ -11,27 +9,6 @@ import { fetchAccessToken } from './google-drive-v3/oauth';
 import { resolve } from './google-drive-v3';
 import { download } from './google-drive-v3/files/download';
 import { get } from './google-drive-v3/files/get';
-import { parseAuthorizationHeader } from './basic-authentication';
-
-// following this diagram: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication/http-auth-sequence-diagram.png
-export const checkBasicAuthentication = ({ request }: RequestEvent) => {
-	if (APP_BASIC_USERNAME === '') {
-		return; // basic auth is disabled
-	}
-
-	const authorizationHeader = request.headers.get('authorization') ?? undefined;
-	if (authorizationHeader === undefined) {
-		return new Response(undefined, {
-			status: 401,
-			headers: { 'www-authenticate': 'Basic' }
-		});
-	}
-
-	const { username, password } = parseAuthorizationHeader(authorizationHeader);
-	if (APP_BASIC_USERNAME !== username || APP_BASIC_PASSWORD !== password) {
-		throw error(401);
-	}
-};
 
 const TOKEN_KV_KEY = '__access_token';
 export const fetchToken = async ({ platform }: RequestEvent) => {
