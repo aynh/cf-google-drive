@@ -1,15 +1,17 @@
-import { APP_API_KEY, APP_BASIC_PASSWORD, APP_BASIC_USERNAME } from '$env/static/private';
-import { error, type RequestEvent } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { parseBasicAuthorizationHeader } from './basic';
 
-export const checkApiKeyAuthentication = ({ request }: RequestEvent) => {
-	if (request.headers.get('x-api-key') !== APP_API_KEY) {
+export const checkApiKeyAuthentication = (request: Request, { key }: { key: string }) => {
+	if (request.headers.get('x-api-key') !== key) {
 		throw error(401);
 	}
 };
 
 // following this diagram: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication/http-auth-sequence-diagram.png
-export const checkBasicAuthentication = ({ request }: RequestEvent) => {
+export const checkBasicAuthentication = (
+	request: Request,
+	options: Record<'username' | 'password', string>
+) => {
 	const authorizationHeader = request.headers.get('authorization') ?? undefined;
 	if (authorizationHeader === undefined) {
 		return new Response(undefined, {
@@ -19,7 +21,7 @@ export const checkBasicAuthentication = ({ request }: RequestEvent) => {
 	}
 
 	const { username, password } = parseBasicAuthorizationHeader(authorizationHeader);
-	if (APP_BASIC_USERNAME !== username || APP_BASIC_PASSWORD !== password) {
+	if (username !== options.username || password !== options.password) {
 		throw error(401);
 	}
 };

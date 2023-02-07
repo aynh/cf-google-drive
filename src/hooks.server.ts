@@ -7,10 +7,14 @@ import { APP_API_KEY, APP_BASIC_PASSWORD, APP_BASIC_USERNAME } from '$env/static
 
 export const handle = (async ({ event, resolve }) => {
 	if (APP_API_KEY !== '') {
-		checkApiKeyAuthentication(event);
+		checkApiKeyAuthentication(event.request, { key: APP_API_KEY });
 	}
 	if (APP_BASIC_USERNAME !== '' || APP_BASIC_PASSWORD !== '') {
-		const challengeResponse = checkBasicAuthentication(event);
+		const challengeResponse = checkBasicAuthentication(event.request, {
+			username: APP_BASIC_USERNAME,
+			password: APP_BASIC_PASSWORD
+		});
+
 		if (challengeResponse !== undefined) {
 			return challengeResponse;
 		}
