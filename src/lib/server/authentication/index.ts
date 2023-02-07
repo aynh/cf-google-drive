@@ -1,13 +1,15 @@
-import { APP_BASIC_PASSWORD, APP_BASIC_USERNAME } from '$env/static/private';
+import { APP_API_KEY, APP_BASIC_PASSWORD, APP_BASIC_USERNAME } from '$env/static/private';
 import { error, type RequestEvent } from '@sveltejs/kit';
 import { parseBasicAuthorizationHeader } from './basic';
 
+export const checkApiKeyAuthentication = ({ request }: RequestEvent) => {
+	if (request.headers.get('x-api-key') !== APP_API_KEY) {
+		throw error(401);
+	}
+};
+
 // following this diagram: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication/http-auth-sequence-diagram.png
 export const checkBasicAuthentication = ({ request }: RequestEvent) => {
-	if (APP_BASIC_USERNAME === '') {
-		return; // basic auth is disabled
-	}
-
 	const authorizationHeader = request.headers.get('authorization') ?? undefined;
 	if (authorizationHeader === undefined) {
 		return new Response(undefined, {

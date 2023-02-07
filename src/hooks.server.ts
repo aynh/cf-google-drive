@@ -2,12 +2,18 @@ import { error, type Handle } from '@sveltejs/kit';
 import { GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
 import { GoogleDriveV3Error } from '$lib/server/google-drive-v3/error';
 import { fetchToken, handleDownload, resolvePathValue } from '$lib/server';
-import { checkBasicAuthentication } from '$lib/server/authentication';
+import { checkApiKeyAuthentication, checkBasicAuthentication } from '$lib/server/authentication';
+import { APP_API_KEY, APP_BASIC_PASSWORD, APP_BASIC_USERNAME } from '$env/static/private';
 
 export const handle = (async ({ event, resolve }) => {
-	const authenticationResponse = checkBasicAuthentication(event);
-	if (authenticationResponse !== undefined) {
-		return authenticationResponse;
+	if (APP_API_KEY !== '') {
+		checkApiKeyAuthentication(event);
+	}
+	if (APP_BASIC_USERNAME !== '' || APP_BASIC_PASSWORD !== '') {
+		const challengeResponse = checkBasicAuthentication(event);
+		if (challengeResponse !== undefined) {
+			return challengeResponse;
+		}
 	}
 
 	try {
