@@ -7,6 +7,7 @@ export interface ApiResponseItem {
 	mime: string;
 	size?: number;
 	path: string;
+	url: string;
 }
 
 export interface ApiResponse extends ApiResponseItem {
@@ -19,15 +20,16 @@ export const handleApiRequest = async ({ locals: { pathValue, token }, url }: Re
 		mime: pathValue.mimeType,
 		size: pathValue.size,
 		path: url.pathname,
+		url: url.toString(),
 		items: []
 	} as ApiResponse;
 
 	// populate items if it's a folder
 	if (pathValue.mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME) {
-		const { pathname } = url;
-		const path = pathname.endsWith('/') ? pathname : `${pathname}/`; // ensure path always ends with a /
 		response.items = (await list(token, pathValue.id)).map(({ name, mimeType: mime, size }) => {
-			return { name, mime, size, path: `${path}${encodeURIComponent(name)}` };
+			const url_ = new URL(url);
+			url_.pathname += url.pathname.endsWith('/') ? name : `/${name}`;
+			return { name, mime, size, path: url_.pathname, url: url_.toString() };
 		});
 	}
 
