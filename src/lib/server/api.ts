@@ -35,8 +35,13 @@ export const handleApiRequest = async ({ locals: { pathValue, token }, url }: Re
 };
 
 export const isApiRequest = (request: Request) => {
-	const first = request.headers.get('accept')?.split(',').shift() ?? '';
-	return !first.includes('text/html') && !first.includes('application/xhtml+xml');
+	const accept = request.headers.get('accept') ?? undefined;
+	if (accept === undefined) {
+		return false;
+	}
+
+	const first = accept.split(',').shift()!;
+	return first.includes('application/json');
 };
 
 if (import.meta.vitest) {
@@ -46,10 +51,14 @@ if (import.meta.vitest) {
 		const request = new Request(import.meta.url);
 
 		// no accept header
-		expect(isApiRequest(request)).toBe(true);
+		expect(isApiRequest(request)).toBe(false);
 
 		request.headers.set('accept', '*/*');
 		// curl default accept header
+		expect(isApiRequest(request)).toBe(false);
+
+		request.headers.set('accept', 'application/json');
+		// explicit application/json
 		expect(isApiRequest(request)).toBe(true);
 
 		request.headers.set(
