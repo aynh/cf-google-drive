@@ -34,38 +34,45 @@ export const handleApiRequest = async ({ locals: { pathValue, token }, url }: Re
 	return json(response);
 };
 
+// returns true if application/json is the most prioritized mime in accept header
+// ref: https://developer.mozilla.org/en-US/docs/Glossary/Quality_values
 export const isApiRequest = (request: Request) => {
 	const accept = request.headers.get('accept') ?? undefined;
 	if (accept === undefined) {
 		return false;
 	}
 
-	const first = accept.split(',').shift()!;
-	return first.includes('application/json');
+	let highest = '';
+	let highestQuality = 0;
+	const qualityRE = new RegExp(/;q=(?<quality>[\d.]+)$/);
+	for (const part of accept.split(',')) {
+		const quality = Number.parseFloat(qualityRE.exec(part)?.groups?.quality ?? '1');
+
+		if (quality > highestQuality) {
+			highest = part;
+		}
+	}
+
+	return highest.includes('application/json');
 };
 
 if (import.meta.vitest) {
-	const { expect, it } = import.meta.vitest;
+	const { describe, expect, it } = import.meta.vitest;
 
-	it('should check api request', () => {
+	describe.each([
+		['application/json', true], // only application/json
+		['application/json;q=0.9,text/plain', false], // application/json has lower quality
+		['text/plain;q=0.9,application/json', true], // the opposite of above
+		['text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8', false] // firefox 92
+	])('$1 is API request = $2', (accept, result) => {
+		it('should check API request', () => {
+			const request = new Request(import.meta.url, { headers: { accept } });
+			expect(isApiRequest(request)).toBe(result);
+		});
+	});
+
+	it('should check API request with no accept header', () => {
 		const request = new Request(import.meta.url);
-
-		// no accept header
-		expect(isApiRequest(request)).toBe(false);
-
-		request.headers.set('accept', '*/*');
-		// curl default accept header
-		expect(isApiRequest(request)).toBe(false);
-
-		request.headers.set('accept', 'application/json');
-		// explicit application/json
-		expect(isApiRequest(request)).toBe(true);
-
-		request.headers.set(
-			'accept',
-			'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'
-		);
-		// firefox 92 accept header
 		expect(isApiRequest(request)).toBe(false);
 	});
 }
