@@ -14,7 +14,7 @@
 </script>
 
 <span class="link">
-	<a href={data.path} data-sveltekit-reload={reload}>{data.name}</a>
+	<a href={data.path} title={data.name} data-sveltekit-reload={reload}>{data.name}</a>
 	<span>{modified}{size}</span>
 </span>
 
