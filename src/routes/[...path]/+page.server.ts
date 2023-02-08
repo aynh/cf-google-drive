@@ -8,7 +8,7 @@ export const load = (async ({ locals, depends, url }) => {
 	const { pathname } = url;
 	const parent = pathname.split('/').slice(0, -1).join('/') || '/'; // set parent to / if it's empty
 	const path = pathname.endsWith('/') ? pathname : `${pathname}/`; // ensure path always ends with a /
-	const title = `Index of ${path}`;
+	const title = `Index of ${decodeURIComponent(path)}`;
 
 	depends(`route:${path}`);
 	try {
