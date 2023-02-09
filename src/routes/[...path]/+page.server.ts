@@ -31,7 +31,9 @@ export const load = (async ({ locals, depends, url }) => {
 				// Turn "29 Jan 2023, 19:51" into "29-Jan-2023 19:51"
 				const modified = format(new Date(modifiedTime)).replaceAll(' ', '-').replace(',-', ' ');
 
-				return { folder, name, modified, path: path_, size };
+				const size_ = size !== undefined ? Number.parseInt(size) : -1;
+
+				return { folder, name, modified, path: path_, size: size_ };
 			}
 		);
 

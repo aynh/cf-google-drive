@@ -20,7 +20,7 @@ export interface FileResource {
 	parents: string[];
 
 	/** The size of the file's content in bytes. */
-	size?: number;
+	size?: string;
 }
 
 export interface FilesParameters {

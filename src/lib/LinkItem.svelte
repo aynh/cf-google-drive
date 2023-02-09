@@ -4,13 +4,13 @@
 		name: string;
 		modified: string;
 		path: string;
-		size?: number;
+		size: number;
 	}
 
 	export let data: Data;
 	$: reload = data.folder ? undefined : ('' as const);
 	$: modified = data.modified.padStart(20);
-	$: size = String(data.size ?? '-').padStart(20);
+	$: size = String(data.size < 0 ? '-' : data.size).padStart(20);
 </script>
 
 <span class="link">
