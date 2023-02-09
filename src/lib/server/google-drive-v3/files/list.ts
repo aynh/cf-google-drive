@@ -4,8 +4,7 @@ import {
 	type FileResource,
 	type FilesParameters
 } from '.';
-import { GoogleDriveV3Error } from '../error';
-import { fetchWithToken, urlWithQuery } from '../util';
+import { fetchGoogleDriveV3 } from '../util';
 
 interface ListResponse {
 	/**
@@ -33,14 +32,10 @@ export const list = async (token: string, folderId: string): Promise<FileResourc
 	const resources = [] as FileResource[];
 	let pageToken: string | undefined = undefined;
 	do {
-		const url = urlWithQuery(GOOGLE_DRIVE_V3_FILES_URL, { ...parameters, pageToken });
-		const response = await fetchWithToken(url, token);
-
-		if (!response.ok) {
-			throw new GoogleDriveV3Error(await response.json());
-		}
-
-		const { files, nextPageToken } = (await response.json()) as ListResponse;
+		const { files, nextPageToken } = (await fetchGoogleDriveV3(GOOGLE_DRIVE_V3_FILES_URL, {
+			token,
+			query: { ...parameters, pageToken }
+		})) as ListResponse;
 
 		pageToken = nextPageToken;
 		resources.push(...files);

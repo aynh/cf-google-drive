@@ -1,9 +1,29 @@
-export const fetchWithToken = async (
-	input: URL | RequestInfo,
-	token: string,
-	init?: RequestInit | undefined
-) =>
-	fetch(input, {
+import { GoogleDriveV3Error } from './error';
+
+type Query = Record<string, { toString: () => string } | undefined>;
+
+export const urlWithQuery = (url: string, query?: Query) => {
+	const u = new URL(url);
+
+	if (query === undefined) {
+		return u;
+	}
+
+	for (const [key, value] of Object.entries(query)) {
+		if (value !== undefined) u.searchParams.append(key, value.toString());
+	}
+
+	return u;
+};
+
+type FetchWrapperOptions = { token: string; query?: Query } & RequestInit;
+
+export const fetchGoogleDriveV3Raw = async (
+	url: string,
+	{ token, query, ...init }: FetchWrapperOptions
+): Promise<Response> => {
+	const url_ = urlWithQuery(url, query);
+	const response = await fetch(url_, {
 		...init,
 		headers: {
 			...Object.fromEntries(new Headers(init?.headers).entries()),
@@ -11,15 +31,18 @@ export const fetchWithToken = async (
 		}
 	});
 
-type UrlQuery = Record<string, { toString: () => string } | undefined>;
-
-export const urlWithQuery = (url: string, query: UrlQuery) => {
-	const u = new URL(url);
-	for (const [key, value] of Object.entries(query)) {
-		if (value !== undefined) u.searchParams.append(key, value.toString());
+	if (!response.ok) {
+		throw new GoogleDriveV3Error(await response.json());
 	}
 
-	return u;
+	return response;
+};
+
+export const fetchGoogleDriveV3 = async <T>(
+	url: string,
+	options: FetchWrapperOptions
+): Promise<T> => {
+	return fetchGoogleDriveV3Raw(url, options).then((response) => response.json());
 };
 
 if (import.meta.vitest) {
