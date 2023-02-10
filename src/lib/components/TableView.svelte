@@ -1,0 +1,75 @@
+<script lang="ts">
+	import { sorted, updateSort } from '$lib/stores/sort';
+	import type { FileValue } from '$lib/types';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import TableViewRow from './TableViewRow.svelte';
+	import TableViewHeader from './TableViewHeader.svelte';
+
+	export let promise: Promise<FileValue[]>;
+</script>
+
+<table class="table-fixed w-full text-sm text-left">
+	<thead>
+		<TableViewHeader
+			values={[
+				{ title: 'Name', key: 'name' },
+				{ title: 'Last Modified', key: 'modified' },
+				{ title: 'Size', key: 'size' },
+			]}
+			on:key-click={({ detail }) => updateSort(detail)}
+		/>
+	</thead>
+	<tbody>
+		{#await promise}
+			<Spinner tag="tr" text="Loading data" />
+		{:then items}
+			{#each $sorted(items) as value}
+				<TableViewRow {value} />
+			{/each}
+		{/await}
+	</tbody>
+</table>
+
+<style lang="less">
+	table,
+	thead,
+	tbody {
+		--uno: 'lt-lg:block';
+	}
+
+	table {
+		--uno: 'border-collapse';
+
+		> :global(thead) > :global(tr) {
+			--uno: 'border-solid';
+		}
+
+		> :global(tbody) > :global(tr) {
+			--uno: 'border-b-solid border-l-solid border-r-solid';
+		}
+
+		:global(tr) {
+			--uno: 'lt-lg:flex border border-$text-main';
+
+			> :global(:where(.name-row, .modified-row)) {
+				--uno: 'border border-r-solid border-$text-main';
+			}
+
+			> :global(:where(td, th)) {
+				--uno: 'px-3 md:px-5 lg:px-6 py-2 md:py-3';
+			}
+
+			> :global(.name-row) {
+				--uno: 'lt-md:w-7/10 lt-lg:w-4/5 truncate';
+			}
+
+			> :global(.modified-row) {
+				--uno: 'lt-lg:hidden lg:w-15%';
+			}
+
+			> :global(.size-row) {
+				--uno: 'lg:w-10% lt-lg:flex-1';
+			}
+		}
+	}
+</style>

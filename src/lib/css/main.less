@@ -1,0 +1,25 @@
+@import 'modern-normalize';
+
+:root {
+	--uno: 'bg-$background-main text-$text-main';
+
+	--text-alt: theme('colors.gray.500');
+	--text-main: theme('colors.gray.600');
+	--text-focus: theme('colors.gray.900');
+	--background-alt: theme('colors.gray.100');
+	--background-main: theme('colors.gray.50');
+	--background-focus: theme('colors.gray.200');
+
+	&.dark {
+		--text-alt: theme('colors.gray.400');
+		--text-main: theme('colors.gray.300');
+		--text-focus: theme('colors.white');
+		--background-alt: theme('colors.gray.700');
+		--background-main: theme('colors.gray.800');
+		--background-focus: theme('colors.gray.600');
+	}
+}
+
+body {
+	font-family: 'ABeeZee', sans-serif;
+}
