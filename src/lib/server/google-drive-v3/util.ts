@@ -20,15 +20,15 @@ type FetchWrapperOptions = { token: string; query?: Query } & RequestInit;
 
 export const fetchGoogleDriveV3Raw = async (
 	url: string,
-	{ token, query, ...init }: FetchWrapperOptions
+	{ token, query, ...init }: FetchWrapperOptions,
 ): Promise<Response> => {
 	const url_ = urlWithQuery(url, query);
 	const response = await fetch(url_, {
 		...init,
 		headers: {
 			...Object.fromEntries(new Headers(init?.headers).entries()),
-			authorization: `Bearer ${token}`
-		}
+			authorization: `Bearer ${token}`,
+		},
 	});
 
 	if (!response.ok) {
@@ -40,7 +40,7 @@ export const fetchGoogleDriveV3Raw = async (
 
 export const fetchGoogleDriveV3 = async <T>(
 	url: string,
-	options: FetchWrapperOptions
+	options: FetchWrapperOptions,
 ): Promise<T> => {
 	return fetchGoogleDriveV3Raw(url, options).then((response) => response.json());
 };

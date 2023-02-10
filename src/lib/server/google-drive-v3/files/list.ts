@@ -2,7 +2,7 @@ import {
 	GOOGLE_DRIVE_V3_FILES_FIELDS,
 	GOOGLE_DRIVE_V3_FILES_URL,
 	type FileResource,
-	type FilesParameters
+	type FilesParameters,
 } from '.';
 import { fetchGoogleDriveV3 } from '../util';
 
@@ -26,7 +26,7 @@ export const list = async (token: string, folderId: string): Promise<FileResourc
 		q: `trashed = false and '${folderId}' in parents`,
 		includeItemsFromAllDrives: true,
 		pageSize: 1000,
-		supportsAllDrives: true
+		supportsAllDrives: true,
 	} satisfies FilesParameters;
 
 	const resources = [] as FileResource[];
@@ -34,7 +34,7 @@ export const list = async (token: string, folderId: string): Promise<FileResourc
 	do {
 		const { files, nextPageToken } = (await fetchGoogleDriveV3(GOOGLE_DRIVE_V3_FILES_URL, {
 			token,
-			query: { ...parameters, pageToken }
+			query: { ...parameters, pageToken },
 		})) as ListResponse;
 
 		pageToken = nextPageToken;

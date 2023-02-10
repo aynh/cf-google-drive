@@ -27,7 +27,7 @@ if (import.meta.vitest) {
 	describe.each([
 		{ path: '/a.txt' },
 		{ path: '/nested/directory' },
-		{ path: '/nested/directory/file.txt' }
+		{ path: '/nested/directory/file.txt' },
 	])('should resolve $path', ({ path }) => {
 		it('should resolve', async ({ token, folderId }) => {
 			const value = await resolve(token, folderId, path);

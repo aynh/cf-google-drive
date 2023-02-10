@@ -19,7 +19,7 @@ describe('files methods', () => {
 			{ name: 'a.txt', mimeType: 'text/plain', parents: [folderId] },
 			{ name: 'b.txt', mimeType: 'text/plain', parents: [folderId] },
 			{ name: 'c.txt', mimeType: 'text/plain', parents: [folderId] },
-			{ name: 'nested', mimeType: GOOGLE_DRIVE_V3_FOLDER_MIME, parents: [folderId] }
+			{ name: 'nested', mimeType: GOOGLE_DRIVE_V3_FOLDER_MIME, parents: [folderId] },
 		]);
 
 		aTxt = listResults.find(({ name }) => name === 'a.txt')!;

@@ -19,7 +19,7 @@ beforeAll(async ({ filepath }) => {
 	({ token } = await fetchAccessToken({
 		client_id: import.meta.env.TEST_CLIENT_ID,
 		client_secret: import.meta.env.TEST_CLIENT_SECRET,
-		refresh_token: import.meta.env.TEST_REFRESH_TOKEN
+		refresh_token: import.meta.env.TEST_REFRESH_TOKEN,
 	}));
 });
 

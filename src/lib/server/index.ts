@@ -2,7 +2,7 @@ import {
 	APP_CLIENT_ID,
 	APP_CLIENT_SECRET,
 	APP_FOLDER_ID,
-	APP_REFRESH_TOKEN
+	APP_REFRESH_TOKEN,
 } from '$env/static/private';
 import { error, type RequestEvent } from '@sveltejs/kit';
 import { fetchAccessToken } from './google-drive-v3/oauth';
@@ -25,7 +25,7 @@ export const fetchToken = async ({ platform }: RequestEvent) => {
 	const { expires, token } = await fetchAccessToken({
 		client_id: APP_CLIENT_ID,
 		client_secret: APP_CLIENT_SECRET,
-		refresh_token: APP_REFRESH_TOKEN
+		refresh_token: APP_REFRESH_TOKEN,
 	});
 
 	if (KV !== undefined) {
@@ -55,7 +55,7 @@ export const handleDownload = async ({ locals: { pathValue, token }, request }: 
 		'accept-ranges': 'bytes',
 		'content-length': String(size),
 		'content-type': content.type ?? pathValue.mimeType,
-		'last-modified': new Date(pathValue.modifiedTime).toUTCString()
+		'last-modified': new Date(pathValue.modifiedTime).toUTCString(),
 	});
 	if (content.range !== undefined) {
 		headers.set('content-range', content.range);

@@ -18,7 +18,7 @@ export const load = (async ({ locals, depends, url }) => {
 			month: 'short',
 			year: 'numeric',
 			hour: '2-digit',
-			minute: '2-digit'
+			minute: '2-digit',
 		});
 		const items = (await list(locals.token, locals.pathValue.id)).map(
 			({ mimeType, modifiedTime, size, name: name_ }) => {
@@ -34,7 +34,7 @@ export const load = (async ({ locals, depends, url }) => {
 				const size_ = size !== undefined ? Number.parseInt(size) : -1;
 
 				return { folder, name, modified, path: path_, size: size_ };
-			}
+			},
 		);
 
 		return { items, parent, title };

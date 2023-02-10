@@ -11,10 +11,10 @@ interface DownloadResponse {
 export const download = async (
 	token: string,
 	id: string,
-	range?: string
+	range?: string,
 ): Promise<DownloadResponse> => {
 	const parameters = {
-		supportsAllDrives: true
+		supportsAllDrives: true,
 	} satisfies FilesParameters;
 
 	const url = GOOGLE_DRIVE_V3_FILES_URL + id;
@@ -22,7 +22,7 @@ export const download = async (
 		...parameters,
 		// from https://developers.google.com/drive/api/v3/reference/files/get#response:
 		// If you provide the URL parameter alt=media, then the response includes the file contents in the response body.
-		alt: 'media'
+		alt: 'media',
 	};
 	const headers = new Headers();
 	if (range !== undefined) {
@@ -43,7 +43,7 @@ export const download = async (
 		content: {
 			type: contentHeader('type'),
 			range: contentHeader('range'),
-			length: contentHeader('length')
-		}
+			length: contentHeader('length'),
+		},
 	};
 };

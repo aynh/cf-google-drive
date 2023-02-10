@@ -19,19 +19,19 @@ export interface AccessToken {
 export const fetchAccessToken = async ({
 	client_id,
 	client_secret,
-	refresh_token
+	refresh_token,
 }: FetchAccessTokenParams): Promise<AccessToken> => {
 	const body = new URLSearchParams({
 		client_id,
 		client_secret,
 		refresh_token,
-		grant_type: 'refresh_token'
+		grant_type: 'refresh_token',
 	});
 
 	const response = await fetch('https://oauth2.googleapis.com/token', {
 		body,
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		method: 'POST'
+		method: 'POST',
 	});
 
 	if (!response.ok) {
@@ -42,7 +42,7 @@ export const fetchAccessToken = async ({
 		.json()
 		.then(({ access_token, expires_in }: { access_token: string; expires_in: number }) => ({
 			token: access_token,
-			expires: expires_in
+			expires: expires_in,
 		}));
 };
 
