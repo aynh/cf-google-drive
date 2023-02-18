@@ -43,9 +43,15 @@ export const handleApiRequest = async ({ locals: { pathValue, token }, url }: Re
 	return json(response);
 };
 
-// returns true if application/json is the most prioritized mime in accept header
+// returns true if json=1 in the search query
+// OR application/json is the most prioritized mime in accept header
 // ref: https://developer.mozilla.org/en-US/docs/Glossary/Quality_values
 export const isApiRequest = (request: Request) => {
+	const jsonQuery = new URL(request.url).searchParams.get('json');
+	if (jsonQuery === '1') {
+		return true;
+	}
+
 	const accept = request.headers.get('accept') ?? undefined;
 	if (accept === undefined) {
 		return false;
@@ -81,6 +87,20 @@ if (import.meta.vitest) {
 			const request = new Request(import.meta.url, { headers: { accept } });
 			expect(isApiRequest(request)).toBe(result);
 		});
+	});
+
+	it('should check API request with json search query', () => {
+		const url = new URL(import.meta.url);
+
+		// no search query
+		expect(isApiRequest(new Request(url))).toBe(false);
+
+		url.searchParams.set('json', '0');
+		// not 1
+		expect(isApiRequest(new Request(url))).toBe(false);
+
+		url.searchParams.set('json', '1');
+		expect(isApiRequest(new Request(url))).toBe(true);
 	});
 
 	it('should check API request with no accept header', () => {
