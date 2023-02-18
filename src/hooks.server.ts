@@ -9,6 +9,7 @@ export const handle = (async ({ event, resolve }) => {
 	if (APP_API_KEY !== '') {
 		checkApiKeyAuthentication(event.request, { key: APP_API_KEY });
 	}
+
 	if (APP_BASIC_USERNAME !== '' || APP_BASIC_PASSWORD !== '') {
 		const challengeResponse = checkBasicAuthentication(event.request, {
 			username: APP_BASIC_USERNAME,

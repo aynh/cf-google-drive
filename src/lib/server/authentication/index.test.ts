@@ -1,13 +1,13 @@
 import { expect, it } from 'vitest';
 import { checkApiKeyAuthentication, checkBasicAuthentication } from '.';
 
-it('should authenticate api key', () => {
+it('should authenticate api key (header)', () => {
 	const request = new Request(import.meta.url);
-	const key = 'api-key';
+	const key = 'key';
 
 	expect(
 		() => checkApiKeyAuthentication(request, { key })
-		// header is not set yet
+		// header is not set
 	).toThrowError();
 
 	request.headers.set('x-api-key', 'wrong');
@@ -18,6 +18,57 @@ it('should authenticate api key', () => {
 
 	request.headers.set('x-api-key', key);
 	expect(() => checkApiKeyAuthentication(request, { key })).not.toThrowError();
+});
+
+it('should authenticate api key (search query)', () => {
+	const url = new URL(import.meta.url);
+	const key = 'key';
+
+	expect(
+		() => checkApiKeyAuthentication(new Request(url), { key })
+		// no search query
+	).toThrowError();
+
+	url.searchParams.set('key', 'wrong');
+	expect(
+		() => checkApiKeyAuthentication(new Request(url), { key })
+		// search query is wrong
+	).toThrowError();
+
+	url.searchParams.set('key', key);
+	expect(() => checkApiKeyAuthentication(new Request(url), { key })).not.toThrowError();
+});
+
+it('should authenticate api key (header OR search query)', () => {
+	const url = new URL(import.meta.url);
+	const headers = new Headers();
+	const key = 'key';
+
+	expect(
+		() => checkApiKeyAuthentication(new Request(url, { headers }), { key })
+		// no header or search query
+	).toThrowError();
+
+	url.searchParams.set('key', 'wrong');
+	headers.set('x-api-key', 'wrong');
+	expect(
+		() => checkApiKeyAuthentication(new Request(url, { headers }), { key })
+		// search query and header is wrong
+	).toThrowError();
+
+	url.searchParams.set('key', 'wrong');
+	headers.set('x-api-key', key);
+	expect(
+		() => checkApiKeyAuthentication(new Request(url, { headers }), { key })
+		// search query is wrong, but header is right
+	).not.toThrowError();
+
+	url.searchParams.set('key', key);
+	headers.set('x-api-key', 'wrong');
+	expect(() =>
+		// search query is right, but header is wrong
+		checkApiKeyAuthentication(new Request(url, { headers }), { key })
+	).not.toThrowError();
 });
 
 it('should authenticate basic http auth', () => {

@@ -2,7 +2,10 @@ import { error } from '@sveltejs/kit';
 import { parseBasicAuthorizationHeader } from './basic';
 
 export const checkApiKeyAuthentication = (request: Request, { key }: { key: string }) => {
-	if (request.headers.get('x-api-key') !== key) {
+	const keyHeader = request.headers.get('x-api-key');
+	const keyQuery = new URL(request.url).searchParams.get('key');
+
+	if (keyHeader !== key && keyQuery !== key) {
 		throw error(401);
 	}
 };
