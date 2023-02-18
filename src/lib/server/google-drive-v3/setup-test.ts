@@ -1,6 +1,11 @@
 import { afterAll, beforeAll, beforeEach } from 'vitest';
 import { fetchAccessToken } from './oauth';
 
+export interface GoogleDriveV3TestContext {
+	token: string;
+	folderId: string;
+}
+
 let token = '';
 let folderId = '';
 
@@ -23,7 +28,7 @@ beforeAll(async ({ filepath }) => {
 	}));
 });
 
-beforeEach((context) => {
+beforeEach<GoogleDriveV3TestContext>((context) => {
 	context.token = token;
 	context.folderId = folderId;
 });

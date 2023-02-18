@@ -1,6 +1,7 @@
 import { GOOGLE_DRIVE_V3_FOLDER_MIME, type FileResource } from './files';
 import { get } from './files/get';
 import { list } from './files/list';
+import type { GoogleDriveV3TestContext } from './setup-test';
 
 export const resolve = async (token: string, root: string, path: string) => {
 	const paths = path.split('/').slice(1);
@@ -29,7 +30,7 @@ if (import.meta.vitest) {
 		{ path: '/nested/directory' },
 		{ path: '/nested/directory/file.txt' },
 	])('should resolve $path', ({ path }) => {
-		it('should resolve', async ({ token, folderId }) => {
+		it<GoogleDriveV3TestContext>('should resolve', async ({ token, folderId }) => {
 			const value = await resolve(token, folderId, path);
 			expect(value).toBeDefined();
 		});

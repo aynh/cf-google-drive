@@ -1,4 +1,5 @@
 import { GoogleDriveV3Error } from './error';
+import type { GoogleDriveV3TestContext } from './setup-test';
 
 interface FetchAccessTokenParams {
 	/** The client ID obtained from the [API Console](https://console.developers.google.com/). */
@@ -49,7 +50,7 @@ export const fetchAccessToken = async ({
 if (import.meta.vitest) {
 	const { expect, it } = import.meta.vitest;
 
-	it('should return a token', async ({ token }) => {
+	it<GoogleDriveV3TestContext>('should return a token', async ({ token }) => {
 		// set in setup-test.ts
 		expect(token).toBeDefined();
 	});

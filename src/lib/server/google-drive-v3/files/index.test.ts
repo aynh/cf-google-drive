@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { GOOGLE_DRIVE_V3_FOLDER_MIME, type FileResource } from '.';
+import type { GoogleDriveV3TestContext } from '../setup-test';
 import { download } from './download';
 import { get } from './get';
 import { list } from './list';
@@ -7,7 +8,7 @@ import { list } from './list';
 describe('files methods', () => {
 	let aTxt: FileResource | undefined = undefined;
 
-	it('should list', async ({ token, folderId }) => {
+	it<GoogleDriveV3TestContext>('should list', async ({ token, folderId }) => {
 		const listResults = await list(token, folderId);
 
 		expect(listResults).toHaveLength(4);
@@ -25,12 +26,12 @@ describe('files methods', () => {
 		aTxt = listResults.find(({ name }) => name === 'a.txt')!;
 	});
 
-	it('should get', async ({ token }) => {
+	it<GoogleDriveV3TestContext>('should get', async ({ token }) => {
 		const getResult = await get(token, aTxt!.id);
 		expect(getResult).toStrictEqual(aTxt);
 	});
 
-	it('should download', async ({ token }) => {
+	it<GoogleDriveV3TestContext>('should download', async ({ token }) => {
 		const { body, status, content } = await download(token, aTxt!.id);
 		const aTxtBody = await new Response(body).text();
 		expect(aTxtBody).toBe('a.txt');
@@ -42,7 +43,7 @@ describe('files methods', () => {
 		expect(content.range).toBeUndefined();
 	});
 
-	it('should download in range', async ({ token }) => {
+	it<GoogleDriveV3TestContext>('should download in range', async ({ token }) => {
 		const { body, status, content } = await download(token, aTxt!.id, 'bytes=2-5');
 		const aTxtBody = await new Response(body).text();
 		expect(aTxtBody).toBe('txt');
