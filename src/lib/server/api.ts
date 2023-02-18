@@ -21,7 +21,7 @@ export const handleApiRequest = async ({ locals: { pathValue, token }, url }: Re
 		size: pathValue.size,
 		path: url.pathname,
 		url: url.toString(),
-		items: []
+		items: [],
 	} as ApiResponse;
 
 	// populate items if it's a folder
@@ -29,7 +29,14 @@ export const handleApiRequest = async ({ locals: { pathValue, token }, url }: Re
 		response.items = (await list(token, pathValue.id)).map(({ name, mimeType: mime, size }) => {
 			const url_ = new URL(url);
 			url_.pathname += url.pathname.endsWith('/') ? name : `/${name}`;
-			return { name, mime, size, path: url_.pathname, url: url_.toString() };
+
+			return {
+				name,
+				mime,
+				size: size !== undefined ? Number.parseInt(size) : undefined,
+				path: url_.pathname,
+				url: url_.toString(),
+			};
 		});
 	}
 
@@ -65,7 +72,10 @@ if (import.meta.vitest) {
 		['application/json', true], // only application/json
 		['application/json;q=0.9,text/plain', false], // application/json has lower quality
 		['text/plain;q=0.9,application/json', true], // the opposite of above
-		['text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8', false] // firefox 92
+		[
+			'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+			false,
+		], // firefox 92
 	])('$1 is API request = $2', (accept, result) => {
 		it('should check API request', () => {
 			const request = new Request(import.meta.url, { headers: { accept } });
