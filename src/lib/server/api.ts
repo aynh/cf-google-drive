@@ -43,15 +43,13 @@ export const handleApiRequest = async ({ locals: { pathValue, token }, url }: Re
 	return json(response);
 };
 
-// returns true if json=1 in the search query
-// OR application/json is the most prioritized mime in accept header
-// ref: https://developer.mozilla.org/en-US/docs/Glossary/Quality_values
 export const isApiRequest = (request: Request) => {
-	const jsonQuery = new URL(request.url).searchParams.get('json');
-	if (jsonQuery === '1') {
-		return true;
-	}
+	return checkJsonSearchQuery(request) || checkJsonAcceptHeader(request);
+};
 
+// returns true if application/json is the most prioritized mime in accept header
+// ref: https://developer.mozilla.org/en-US/docs/Glossary/Quality_values
+const checkJsonAcceptHeader = (request: Request) => {
 	const accept = request.headers.get('accept') ?? undefined;
 	if (accept === undefined) {
 		return false;
@@ -71,8 +69,17 @@ export const isApiRequest = (request: Request) => {
 	return highest.includes('application/json');
 };
 
+// returns true if json=1 in the search query
+const checkJsonSearchQuery = (request: Request) => {
+	return new URL(request.url).searchParams.get('json') === '1';
+};
+
 if (import.meta.vitest) {
 	const { describe, expect, it } = import.meta.vitest;
+
+	it('should check API request with no json accept header', () => {
+		expect(checkJsonAcceptHeader(new Request(import.meta.url))).toBe(false);
+	});
 
 	describe.each([
 		['application/json', true], // only application/json
@@ -83,13 +90,18 @@ if (import.meta.vitest) {
 			false,
 		], // firefox 92
 	])('$1 is API request = $2', (accept, result) => {
-		it('should check API request', () => {
-			const request = new Request(import.meta.url, { headers: { accept } });
-			expect(isApiRequest(request)).toBe(result);
+		it('should check request with json accept header', () => {
+			expect(
+				checkJsonAcceptHeader(
+					new Request(import.meta.url, {
+						headers: { accept },
+					}),
+				),
+			).toBe(result);
 		});
 	});
 
-	it('should check API request with json search query', () => {
+	it('should check request with json search query', () => {
 		const url = new URL(import.meta.url);
 
 		// no search query
@@ -101,10 +113,5 @@ if (import.meta.vitest) {
 
 		url.searchParams.set('json', '1');
 		expect(isApiRequest(new Request(url))).toBe(true);
-	});
-
-	it('should check API request with no accept header', () => {
-		const request = new Request(import.meta.url);
-		expect(isApiRequest(request)).toBe(false);
 	});
 }
