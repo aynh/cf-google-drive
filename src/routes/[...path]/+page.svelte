@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import AppFooter from '$lib/AppFooter.svelte';
 	import DarkToggle from '$lib/components/DarkToggle.svelte';
 	import GridView from '$lib/components/GridView.svelte';
 	import TableView from '$lib/components/TableView.svelte';
@@ -35,3 +36,5 @@
 {:else if view === 'grid'}
 	<GridView promise={data.promise.items} />
 {/if}
+
+<AppFooter />
