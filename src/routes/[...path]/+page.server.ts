@@ -20,8 +20,8 @@ export const load = (async ({ locals, depends, url }) => {
 			hour: '2-digit',
 			minute: '2-digit',
 		});
-		const items = (await list(locals.token, locals.pathValue.id)).map(
-			({ mimeType, modifiedTime, size, name: name_ }) => {
+		const items = list(locals.token, locals.pathValue.id).then((values) =>
+			values.map(({ mimeType, modifiedTime, size, name: name_ }) => {
 				const path_ = `${path}${name_}`;
 
 				const folder = mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME;
@@ -34,10 +34,14 @@ export const load = (async ({ locals, depends, url }) => {
 				const size_ = size !== undefined ? Number.parseInt(size) : -1;
 
 				return { folder, name, modified, path: path_, size: size_ };
-			},
+			}),
 		);
 
-		return { items, parent, title };
+		return {
+			parent,
+			title,
+			promise: { items },
+		};
 	} catch (e) {
 		if (e instanceof GoogleDriveV3Error) {
 			throw error(500, e.error);

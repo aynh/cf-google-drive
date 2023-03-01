@@ -3,7 +3,6 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: items = data.items.sort(({ name: a }, { name: b }) => a.localeCompare(b));
 </script>
 
 <svelte:head>
@@ -12,8 +11,9 @@
 
 <h1>{data.title}</h1>
 <hr />
-<pre style:width="640px"><a href={data.parent}>../</a>{#each items as item}{'\n'}<LinkItem
-			data={item}
-		/>{/each}
+<pre style:width="640px"><a href={data.parent}>../</a
+	>{#await data.promise.items}{'\tLoading...'}{:then items}{#each items.sort( ({ name: a }, { name: b }) => a.localeCompare(b), ) as item}{'\n'}<LinkItem
+				data={item}
+			/>{/each}{/await}
 </pre>
 <hr />
