@@ -11,7 +11,6 @@ import { download } from './google-drive-v3/files/download';
 import { get } from './google-drive-v3/files/get';
 
 const TOKEN_KV_KEY = '__access_token';
-
 export const fetchToken = async ({ platform }: RequestEvent) => {
 	const KV = platform?.env?.TOKEN_STORE;
 
