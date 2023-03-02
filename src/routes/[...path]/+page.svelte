@@ -9,6 +9,17 @@
 	import { page } from '$app/stores';
 
 	export let data: PageData;
+	$: ({ pathname: path } = $page.url);
+	$: promise = data.promise.items.then((values) => {
+		const base = new URL($page.url);
+		// ensure base ends with / to make new URL with base work as expected
+		base.pathname = base.pathname.replace(/[^\/]$/, '$&/');
+
+		return values.map((value) => ({
+			...value,
+			href: new URL(value.name, base).href,
+		}));
+	});
 
 	let view: 'grid' | 'table' = 'table';
 
@@ -18,7 +29,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.title}</title>
+	<title>{`Index of ${decodeURIComponent(path)}`}</title>
 </svelte:head>
 
 <!-- TODO: add view toggler -->
@@ -32,9 +43,9 @@
 </div>
 
 {#if view === 'table'}
-	<TableView promise={data.promise.items} />
+	<TableView {promise} />
 {:else if view === 'grid'}
-	<GridView promise={data.promise.items} />
+	<GridView {promise} />
 {/if}
 
 <AppFooter />

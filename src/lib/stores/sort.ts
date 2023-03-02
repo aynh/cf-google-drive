@@ -1,5 +1,6 @@
 import { derived, writable } from 'svelte/store';
 import type { FileValue } from '$lib/types';
+import { FileType } from '$lib/filetype';
 
 export enum SortKey {
 	name,
@@ -23,7 +24,7 @@ export const sort = writable(__sortDefault);
 const createSorted = (options: SortOptions) => {
 	return (items: FileValue[]) => {
 		items.sort((a, b) => {
-			const folderFirst = Number(b.folder) - Number(a.folder);
+			const folderFirst = Number(b.type === FileType.folder) - Number(a.type === FileType.folder);
 
 			const compareName = () =>
 				folderFirst || // put folder first when sorting by name

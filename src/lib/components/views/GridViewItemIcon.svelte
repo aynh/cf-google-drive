@@ -3,7 +3,7 @@
 	import FileTypeIcon from '$lib/components/FileTypeIcon.svelte';
 
 	export let value: FileValue;
-	$: ({ name, path, thumbnail, type } = value);
+	$: ({ href, name, thumbnail, type } = value);
 
 	let imageLoaded = false; // show a placeholder if image is not loaded
 </script>
@@ -13,7 +13,7 @@
 		<img
 			on:load={() => (imageLoaded = true)}
 			loading="lazy"
-			src="{path}?thumbnail"
+			src="{href}?thumbnail"
 			alt="{name} thumbnail"
 			class:opacity-0={!imageLoaded}
 			class="object-cover"

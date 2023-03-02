@@ -5,13 +5,7 @@ import { list } from '$lib/server/google-drive-v3/files/list';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ locals, depends, url }) => {
-	const { pathname } = url;
-	const parent = pathname.split('/').slice(0, -1).join('/') || '/'; // set parent to / if it's empty
-	const path = pathname.endsWith('/') ? pathname : `${pathname}/`; // ensure path always ends with a /
-	const title = `Index of ${decodeURIComponent(path)}`;
-
-	depends(`route:${path}`);
+export const load = (async ({ locals, url }) => {
 	try {
 		// Format date into something like "29 Jan 2023, 19:51"
 		const { format } = new Intl.DateTimeFormat('en-GB', {
@@ -21,37 +15,34 @@ export const load = (async ({ locals, depends, url }) => {
 			hour: '2-digit',
 			minute: '2-digit',
 		});
-		const items = list(locals.token, locals.pathValue.id).then((values) =>
-			values.map(({ mimeType, modifiedTime, size, name: name_, thumbnailLink }) => {
-				const path_ = `${path}${name_}`;
-
-				const folder = mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME;
-				// suffix name with / if it's a folder
-				const name = folder ? `${name_}/` : name_;
-
-				const type = folder ? FileType.folder : resolveFileType({ name: name_, mimeType });
-
-				// Turn "29 Jan 2023, 19:51" into "29-Jan-2023 19:51"
-				const modified = format(new Date(modifiedTime)).replaceAll(' ', '-').replace(',-', ' ');
-
-				const size_ = size !== undefined ? Number.parseInt(size) : -1;
-
-				return {
-					folder,
-					name,
-					modified,
-					path: path_,
-					size: size_,
-					thumbnail: thumbnailLink !== undefined,
-					type,
-				};
-			}),
-		);
 
 		return {
-			parent,
-			title,
-			promise: { items },
+			promise: {
+				items: list(locals.token, locals.pathValue.id).then((values) =>
+					values.map(({ mimeType, modifiedTime, size, name: name_, thumbnailLink }) => {
+						const type =
+							mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME
+								? FileType.folder
+								: resolveFileType({ name: name_, mimeType });
+
+						// suffix name with / if it's a folder
+						const name = type === FileType.folder ? `${name_}/` : name_;
+
+						// Turn "29 Jan 2023, 19:51" into "29-Jan-2023 19:51"
+						const modified = format(new Date(modifiedTime)).replaceAll(' ', '-').replace(',-', ' ');
+
+						const size_ = size !== undefined ? Number.parseInt(size) : -1;
+
+						return {
+							name,
+							modified,
+							size: size_,
+							thumbnail: thumbnailLink !== undefined,
+							type,
+						};
+					}),
+				),
+			},
 		};
 	} catch (e) {
 		if (e instanceof GoogleDriveV3Error) {

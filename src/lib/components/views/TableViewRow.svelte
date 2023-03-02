@@ -1,18 +1,19 @@
 <script lang="ts">
 	import prettyBytes from 'pretty-bytes';
 	import type { FileValue } from '$lib/types';
+	import { FileType } from '$lib/filetype';
 
 	export let value: FileValue;
-	$: ({ folder, modified, name, path, size } = value);
+	$: ({ href, modified, name, size, type } = value);
 	$: bytes = size < 0 ? '-' : prettyBytes(size);
 </script>
 
 <tr class="bg-$background-main hover:bg-$background-focus">
 	<th scope="row" class="name-row">
 		<a
+			{href}
 			class="font-medium text-$text-focus decoration-none hover:underline"
-			href={path}
-			data-sveltekit-reload={folder ? undefined : ''}
+			data-sveltekit-reload={type === FileType.folder ? undefined : ''}
 			title={name}
 		>
 			{name}

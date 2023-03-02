@@ -1,15 +1,16 @@
 <script lang="ts">
+	import { FileType } from '$lib/filetype';
 	import type { FileValue } from '$lib/types';
 	import GridViewItemIcon from './GridViewItemIcon.svelte';
 
 	export let value: FileValue;
-	$: ({ folder, name, path } = value);
+	$: ({ href, name, type } = value);
 </script>
 
 <a
-	href={path}
+	{href}
 	title={name}
-	data-sveltekit-reload={folder ? undefined : ''}
+	data-sveltekit-reload={type === FileType.folder ? undefined : ''}
 	class="w-full h-full flex flex-col items-center justify-center text-center text-$text-main hover:text-$text-focus decoration-none hover:underline bg-$background-main hover:bg-$background-focus p-2 lg:p-4"
 >
 	<GridViewItemIcon {value} />
