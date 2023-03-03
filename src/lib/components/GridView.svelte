@@ -1,23 +1,21 @@
 <script lang="ts">
-	import { sort, sorted, type SortOptions } from '$lib/stores/sort';
+	import { sort, sorted, SortKey, SortOrder } from '$lib/stores/sort';
 	import type { FileValue } from '$lib/types';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import GridVIewItem from './GridVIewItem.svelte';
 
 	export let promise: Promise<FileValue[]>;
 
-	const sortSelections = (['name', 'modified', 'size'] satisfies Array<SortOptions['key']>).flatMap(
-		(key) => {
-			return (['ascending', 'descending'] satisfies Array<SortOptions['order']>).map((order) => {
-				return { name: `${key} (${order})`, value: `${key}|${order}` };
-			});
-		},
-	);
+	const sortSelections = [SortKey.name, SortKey.modified, SortKey.size].flatMap((key) => {
+		return [SortOrder.ascending, SortOrder.descending].map((order) => {
+			return { name: `${SortKey[key]} (${SortOrder[order]})`, value: `${key}|${order}` };
+		});
+	});
 
 	let selectedSort = `${$sort.key}|${$sort.order}`;
 	$: {
-		const [key, order] = selectedSort.split('|');
-		$sort = { key, order } as SortOptions;
+		const [key, order] = selectedSort.split('|').map(Number);
+		$sort = { key, order };
 	}
 </script>
 

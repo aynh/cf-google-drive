@@ -1,20 +1,20 @@
 <script lang="ts">
-	import type { SortOptions } from '$lib/stores/sort';
+	import { SortKey } from '$lib/stores/sort';
 	import { createEventDispatcher } from 'svelte';
 
 	interface HeaderValue {
 		title: string;
-		key: SortOptions['key'];
+		key: SortKey;
 	}
 
 	export let values: HeaderValue[];
 
-	const dispatch = createEventDispatcher<{ 'key-click': SortOptions['key'] }>();
+	const dispatch = createEventDispatcher<{ 'key-click': SortKey }>();
 </script>
 
 <tr class="text-xs bg-$background-alt">
 	{#each values as { title, key }}
-		<th scope="col" class={`${key}-row`}>
+		<th scope="col" class={`${SortKey[key]}-row`}>
 			<button
 				on:click={() => dispatch('key-click', key)}
 				title={`Sort by ${title.toLowerCase()}`}

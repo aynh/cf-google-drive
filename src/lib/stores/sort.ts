@@ -1,22 +1,24 @@
 import { derived, writable } from 'svelte/store';
 import type { FileValue } from '$lib/types';
 
-export interface SortOptions {
-	key: 'name' | 'modified' | 'size';
-	order: 'ascending' | 'descending';
+export enum SortKey {
+	name,
+	modified,
+	size,
 }
 
-export const __sortDefault: SortOptions = { key: 'name', order: 'ascending' };
-export const sort = writable(__sortDefault);
+export enum SortOrder {
+	ascending,
+	descending,
+}
 
-export const updateSort = (key: SortOptions['key']) => {
-	sort.update(($sort) => ({
-		key,
-		order:
-			// interchange between ascending and descending
-			$sort.key === key && $sort.order === 'ascending' ? 'descending' : 'ascending',
-	}));
-};
+export interface SortOptions {
+	key: SortKey;
+	order: SortOrder;
+}
+
+export const __sortDefault: SortOptions = { key: SortKey.name, order: SortOrder.ascending };
+export const sort = writable(__sortDefault);
 
 const createSorted = (options: SortOptions) => {
 	return (items: FileValue[]) => {
@@ -28,23 +30,23 @@ const createSorted = (options: SortOptions) => {
 				a.name.localeCompare(b.name);
 			const compareModified = () => Number(new Date(a.modified)) - Number(new Date(b.modified));
 			const compareSize = () =>
-				(options.order === 'ascending'
+				(options.order === SortOrder.ascending
 					? -folderFirst // put folder last if ascending
 					: 0) || a.size - b.size;
 
 			switch (options.key) {
-				case 'name':
+				case SortKey.name:
 					return compareName() || compareModified() || compareSize();
 
-				case 'modified':
+				case SortKey.modified:
 					return compareModified() || compareName() || compareSize();
 
-				case 'size':
+				case SortKey.size:
 					return compareSize() || compareName() || compareModified();
 			}
 		});
 
-		return options.order === 'ascending' ? items : [...items].reverse();
+		return options.order === SortOrder.ascending ? items : [...items].reverse();
 	};
 };
 

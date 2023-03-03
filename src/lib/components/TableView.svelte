@@ -1,22 +1,33 @@
 <script lang="ts">
-	import { sorted, updateSort } from '$lib/stores/sort';
+	import { sort, sorted, SortKey, SortOrder } from '$lib/stores/sort';
 	import type { FileValue } from '$lib/types';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import TableViewRow from './TableViewRow.svelte';
 	import TableViewHeader from './TableViewHeader.svelte';
 
 	export let promise: Promise<FileValue[]>;
+
+	const handleKeyClick = ({ detail: key }: CustomEvent<SortKey>) => {
+		$sort = {
+			key,
+			order:
+				$sort.key === key && $sort.order === SortOrder.ascending
+					? // interchange between ascending and descending
+					  SortOrder.descending
+					: SortOrder.ascending,
+		};
+	};
 </script>
 
 <table class="table-fixed w-full text-sm text-left">
 	<thead>
 		<TableViewHeader
+			on:key-click={handleKeyClick}
 			values={[
-				{ title: 'Name', key: 'name' },
-				{ title: 'Last Modified', key: 'modified' },
-				{ title: 'Size', key: 'size' },
+				{ title: 'Name', key: SortKey.name },
+				{ title: 'Last Modified', key: SortKey.modified },
+				{ title: 'Size', key: SortKey.size },
 			]}
-			on:key-click={({ detail }) => updateSort(detail)}
 		/>
 	</thead>
 	<tbody>
