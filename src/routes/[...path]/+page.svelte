@@ -2,8 +2,8 @@
 	import type { PageData } from './$types';
 	import AppFooter from '$lib/AppFooter.svelte';
 	import DarkToggle from '$lib/components/DarkToggle.svelte';
-	import GridView from '$lib/components/GridView.svelte';
-	import TableView from '$lib/components/TableView.svelte';
+	import GridView from '$lib/components/views/GridView.svelte';
+	import TableView from '$lib/components/views/TableView.svelte';
 	import { sort, __sortDefault } from '$lib/stores/sort';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';

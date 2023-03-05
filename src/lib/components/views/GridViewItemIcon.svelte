@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { FileValue } from '$lib/types';
-	import FileTypeIcon from './FileTypeIcon.svelte';
+	import FileTypeIcon from '$lib/components/FileTypeIcon.svelte';
 
 	export let value: FileValue;
 	$: ({ name, path, thumbnail, type } = value);
