@@ -23,7 +23,7 @@ export const sort = writable(__sortDefault);
 
 const createSorted = (options: SortOptions) => {
 	return (items: FileValue[]) => {
-		items.sort((a, b) => {
+		const items_ = [...items].sort((a, b) => {
 			const folderFirst = Number(b.type === FileType.folder) - Number(a.type === FileType.folder);
 
 			const compareName = () =>
@@ -47,7 +47,7 @@ const createSorted = (options: SortOptions) => {
 			}
 		});
 
-		return options.order === SortOrder.ascending ? items : [...items].reverse();
+		return options.order === SortOrder.ascending ? items_ : items_.reverse();
 	};
 };
 
@@ -56,3 +56,38 @@ export const sorted = derived(
 	($sort, set) => set(createSorted($sort)),
 	createSorted(__sortDefault),
 );
+
+if (import.meta.vitest) {
+	const { describe, expect, it } = import.meta.vitest;
+
+	const predicates: FileValue[] = (
+		[
+			{
+				name: 'b',
+				modified: new Date(2000, 0, 2).toUTCString(),
+				size: 1001,
+				type: FileType.unknown,
+			},
+			{
+				name: 'a',
+				modified: new Date(2000, 0, 1).toUTCString(),
+				size: 1000,
+				type: FileType.folder,
+			},
+		] as Omit<FileValue, 'path' | 'thumbnail'>[]
+	).map((value) => ({ ...value, path: '_', thumbnail: false }));
+
+	describe.each<SortOptions & { outputs: FileValue[] }>([
+		{ key: SortKey.name, order: SortOrder.ascending, outputs: [predicates[1], predicates[0]] },
+		{ key: SortKey.name, order: SortOrder.descending, outputs: [predicates[0], predicates[1]] },
+		{ key: SortKey.modified, order: SortOrder.ascending, outputs: [predicates[1], predicates[0]] },
+		{ key: SortKey.modified, order: SortOrder.descending, outputs: [predicates[0], predicates[1]] },
+		{ key: SortKey.size, order: SortOrder.ascending, outputs: [predicates[0], predicates[1]] },
+		{ key: SortKey.size, order: SortOrder.descending, outputs: [predicates[0], predicates[1]] },
+	])('$key $order', ({ outputs, ...options }) => {
+		it('should sort', () => {
+			const sorted = createSorted(options);
+			expect(sorted(predicates)).toStrictEqual(outputs);
+		});
+	});
+}
