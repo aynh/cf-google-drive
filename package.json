@@ -34,6 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@floating-ui/dom": "^1.2.3",
 		"modern-normalize": "^1.1.0",
 		"pretty-bytes": "^6.1.0"
 	}

@@ -11,14 +11,19 @@ export enum ViewKind {
 	table,
 }
 
+export enum ThemeKind {
+	dark,
+	light,
+}
+
 export interface State {
 	view: ViewKind;
-	dark: boolean;
+	theme: ThemeKind;
 }
 
 export type ViewComponent = typeof SvelteComponentTyped<{ promise: Promise<FileValue[]> }>;
 
-export const state = writable<State>({ dark: false, view: ViewKind.table });
+export const state = writable<State>({ view: ViewKind.table, theme: ThemeKind.light });
 
 if (browser) {
 	const key = `state-${git.hash}`;
