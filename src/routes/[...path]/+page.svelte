@@ -2,9 +2,8 @@
 	import type { PageData } from './$types';
 	import AppFooter from '$lib/AppFooter.svelte';
 	import DarkToggle from '$lib/components/DarkToggle.svelte';
-	import GridView from '$lib/components/views/GridView.svelte';
-	import TableView from '$lib/components/views/TableView.svelte';
 	import { sort, __sortDefault } from '$lib/stores/sort';
+	import { View, state, ViewKind } from '$lib/stores/state';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 
@@ -21,8 +20,6 @@
 		}));
 	});
 
-	let view: 'grid' | 'table' = 'table';
-
 	afterNavigate(() => {
 		sort.set(__sortDefault);
 	});
@@ -35,17 +32,13 @@
 <!-- TODO: add view toggler -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-	on:click={() => (view = view === 'grid' ? 'table' : 'grid')}
+	on:click={() => ($state.view = $state.view === ViewKind.grid ? ViewKind.table : ViewKind.grid)}
 	class="flex space-x-2 items-center justify-between p-2 pr-3 bg-$background-alt mb-1 lg:mb-2 border border-solid border-$text-main"
 >
 	<div />
 	<DarkToggle />
 </div>
 
-{#if view === 'table'}
-	<TableView {promise} />
-{:else if view === 'grid'}
-	<GridView {promise} />
-{/if}
+<svelte:component this={$View} {promise} />
 
 <AppFooter />
