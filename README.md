@@ -6,7 +6,11 @@
 
 ## Features
 
-- Basic file listing and direct download
+- [x] Basic file listing and direct download
+- [ ] Streamlined deployment
+- [ ] Authentication
+- [ ] API support
+- [ ] Beautiful frontend
 
 ## Setup
 
