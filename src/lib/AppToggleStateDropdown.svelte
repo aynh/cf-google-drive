@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { offset, shift } from '@floating-ui/dom';
-	import { dropdown } from './dropdown';
+	import { dropdown } from './utilities/dropdown';
 
 	export let name: string;
 
@@ -13,12 +13,12 @@
 <div>
 	<button
 		use:setDropdownToggle
-		on:click={() => show.toggle()}
+		on:click={() => ($show = !$show)}
 		aria-label="Toggle {name} dropdown"
-		class="flex lt-md:flex-row-reverse items-center -space-x-0.5 md:space-x-0.5 border border-solid ring-$text-focus focus:ring-2 rounded-lg py-1 px-2 md:px-3"
+		class="flex md:flex-row-reverse items-center space-x-0.5 md:space-x-1 md:space-x-reverse border border-solid ring-$text-focus focus:ring-2 rounded-lg py-1 px-2 md:px-3"
 	>
-		<span> {name} </span>
 		<div class="i-lucide-chevron-down" />
+		<span> {name} </span>
 	</button>
 
 	{#if $show}

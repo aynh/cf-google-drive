@@ -17,11 +17,9 @@ export const resolveFileType = ({ name, mimeType }: Pick<FileResource, 'name' | 
 };
 
 const fileTypeFromMimePrefix = (mimeType: string) => {
-	for (const prefix of [FileType.audio, FileType.image, FileType.video, FileType.text]) {
-		if (mimeType.startsWith(FileType[prefix])) {
-			return prefix;
-		}
-	}
+	const prefixes = [FileType.audio, FileType.image, FileType.video, FileType.text];
+
+	return prefixes.find((type) => mimeType.startsWith(FileType[type]));
 };
 
 const fileTypeFromExtension = (name: string) => {

@@ -1,12 +1,15 @@
 <script lang="ts">
+	import { navigating } from '$app/stores';
+
 	export let tag = 'div';
-	export let text = 'Loading data';
+	export let text: string | undefined = undefined;
+	$: default_ = $navigating ? 'Loading page' : 'Loading data';
 </script>
 
-<svelte:element this={tag} class="{$$props.class} relative h-65vh">
-	<div class="absolute-center flex flex-col items-center space-y-4">
+<svelte:element this={tag} class="relative h-65vh">
+	<div class="absolute-center flex flex-col items-center">
 		<div class="spinner" />
-		<span>{text}</span>
+		<span class="mt-4">{text ?? default_}</span>
 	</div>
 </svelte:element>
 

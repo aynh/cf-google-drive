@@ -2,18 +2,16 @@
 	import { SortKey } from '$lib/stores/sort';
 	import { createEventDispatcher } from 'svelte';
 
-	interface HeaderValue {
-		title: string;
-		key: SortKey;
-	}
-
-	export let values: HeaderValue[];
-
 	const dispatch = createEventDispatcher<{ 'key-click': SortKey }>();
+	const headers = [
+		['Name', SortKey.name],
+		['Last Modified', SortKey.modified],
+		['Size', SortKey.size],
+	] as const;
 </script>
 
-<tr class="text-xs bg-$background-alt">
-	{#each values as { title, key }}
+<tr class="lt-lg:text-xs bg-$background-alt">
+	{#each headers as [title, key]}
 		<th scope="col" class={`${SortKey[key]}-row`}>
 			<button
 				on:click={() => dispatch('key-click', key)}

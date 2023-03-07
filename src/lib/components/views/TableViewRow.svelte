@@ -5,26 +5,21 @@
 
 	export let value: FileValue;
 	$: ({ href, modified, name, size, type } = value);
-	$: bytes = size < 0 ? '-' : prettyBytes(size);
+	$: bytes = Number.isNaN(size) ? '-' : prettyBytes(size);
+	$: isFolder = type === FileType.folder;
 </script>
 
 <tr class="hover:bg-$background-focus">
-	<th scope="row" class="name-row">
+	<th scope="row" class="name-row truncate">
 		<a
 			{href}
 			class="text-$text-focus"
-			data-sveltekit-reload={type === FileType.folder ? undefined : ''}
+			data-sveltekit-reload={isFolder ? undefined : ''}
 			title={name}
 		>
-			{name}
+			{isFolder ? `${name}/` : name}
 		</a>
 	</th>
 	<td class="modified-row"> {modified} </td>
 	<td class="size-row"> {bytes} </td>
 </tr>
-
-<style>
-	tr > :where(td, th) {
-		--uno: 'lg:py-4';
-	}
-</style>

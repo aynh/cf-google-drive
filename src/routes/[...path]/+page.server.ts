@@ -1,4 +1,4 @@
-import { compact } from '$lib/compact';
+import { compact } from '$lib/utilities/compact';
 import { resolveFileType, FileType } from '$lib/filetype';
 import { GoogleDriveV3Error } from '$lib/server/google-drive-v3/error';
 import { GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
@@ -6,10 +6,12 @@ import { list } from '$lib/server/google-drive-v3/files/list';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ locals, url }) => {
+export const load = (async ({ locals, params }) => {
+	params.path; // depends(params.path)
+
 	try {
-		// Format date into something like "29 Jan 2023, 19:51"
-		const { format } = new Intl.DateTimeFormat('en-GB', {
+		// format date into something like "29 Jan 2023, 19:51"
+		const dateFormat = new Intl.DateTimeFormat('en-GB', {
 			day: 'numeric',
 			month: 'short',
 			year: 'numeric',
@@ -17,32 +19,24 @@ export const load = (async ({ locals, url }) => {
 			minute: '2-digit',
 		});
 
+		// Turn "29 Jan 2023, 19:51" into "29-Jan-2023 19:51"
+		const format = (date: Date) => dateFormat.format(date).replaceAll(' ', '-').replace(',-', ' ');
+
 		return {
-			promise: {
-				items: list(locals.token, locals.pathValue.id).then((values) =>
-					values.map(({ mimeType, modifiedTime, size, name: name_, thumbnailLink }) => {
+			items: {
+				promise: list(locals.token, locals.pathValue.id).then((values) => {
+					return values.map(({ mimeType, modifiedTime, size: size_, name, thumbnailLink }) => {
+						const hasThumbnail = thumbnailLink !== undefined;
+						const modified = format(new Date(modifiedTime));
+						const size = Number(size_);
 						const type =
 							mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME
 								? FileType.folder
-								: resolveFileType({ name: name_, mimeType });
+								: resolveFileType({ name, mimeType });
 
-						// suffix name with / if it's a folder
-						const name = type === FileType.folder ? `${name_}/` : name_;
-
-						// Turn "29 Jan 2023, 19:51" into "29-Jan-2023 19:51"
-						const modified = format(new Date(modifiedTime)).replaceAll(' ', '-').replace(',-', ' ');
-
-						const size_ = size !== undefined ? Number.parseInt(size) : -1;
-
-						return compact({
-							name,
-							modified,
-							size: size_,
-							thumbnail: thumbnailLink !== undefined,
-							type,
-						});
-					}),
-				),
+						return compact({ hasThumbnail, modified, name, size, type });
+					});
+				}),
 			},
 		};
 	} catch (e) {

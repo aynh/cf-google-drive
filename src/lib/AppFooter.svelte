@@ -27,13 +27,15 @@
 </footer>
 
 <style lang="less">
-	footer {
-		> :global(div) {
-			--uno: 'flex space-x-2';
-		}
+	footer > :global(div) {
+		--uno: 'flex space-x-2';
+	}
 
-		:global(a) {
-			--uno: 'flex space-x-1 text-$text-focus';
+	a {
+		--uno: 'flex text-$text-focus underline';
+
+		:global(div) {
+			--uno: 'mr-1.5';
 		}
 	}
 </style>

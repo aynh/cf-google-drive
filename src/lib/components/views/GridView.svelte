@@ -6,7 +6,7 @@
 
 	export let promise: ViewComponentProperties['promise'];
 
-	const sortSelections = [SortKey.name, SortKey.modified, SortKey.size].flatMap((key) => {
+	const sorts = [SortKey.name, SortKey.modified, SortKey.size].flatMap((key) => {
 		return [SortOrder.ascending, SortOrder.descending].map((order) => {
 			return { name: `${SortKey[key]} (${SortOrder[order]})`, value: `${key}|${order}` };
 		});
@@ -19,7 +19,7 @@
 	}
 </script>
 
-<div class="border border-solid">
+<div>
 	<div class="flex justify-end bg-$background-alt border border-b-solid py-2 px-4">
 		<div>
 			<label for="sort-by">sort by</label>
@@ -28,7 +28,7 @@
 				id="sort-by"
 				class="bg-$background-main p-1 border border-solid"
 			>
-				{#each sortSelections as { name, value }}
+				{#each sorts as { name, value }}
 					<option {value}> {name} </option>
 				{/each}
 			</select>

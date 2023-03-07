@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { offset, shift } from '@floating-ui/dom';
-	import { dropdown } from './dropdown';
+	import { dropdown } from './utilities/dropdown';
 	import { url } from './stores/state';
 
 	$: ({ origin, pathname } = $url);
@@ -16,7 +16,7 @@
 <div class="{$$props.class} relative border-r border-r-solid">
 	<button
 		use:setDropdownToggle
-		on:click={() => show.toggle()}
+		on:click={() => ($show = !$show)}
 		aria-label="Toggle navigation dropdown"
 		class="w-full p-3 lt-md:py-2 lg:py-4 truncate font-semibold lt-md:text-sm"
 	>
@@ -30,10 +30,11 @@
 		>
 			<ol class="flex flex-col items-start divide-y divide-$text-focus">
 				{#each paths as part, index}
+					{@const href = paths.slice(0, index + 1).join('/')}
 					<li class="w-full">
 						<a
+							{href}
 							style:padding-left="{index}rem"
-							href={paths.slice(0, index + 1).join('/')}
 							class="flex items-center justify-around break-words py-2"
 						>
 							<div class:i-lucide-home={index === 0} class="w-8 h-8 i-lucide-folder" />

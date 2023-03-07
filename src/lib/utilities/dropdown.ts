@@ -21,8 +21,8 @@ export const dropdown = (options?: Parameters<typeof computePosition>[2]) => {
 		set(false);
 	});
 
-	let show = false;
 	onMount(() => {
+		let show = false;
 		const unsubscribe = subscribe(async (value) => {
 			show = value;
 			if (show) {
@@ -53,15 +53,15 @@ export const dropdown = (options?: Parameters<typeof computePosition>[2]) => {
 		document.addEventListener('keydown', handleKeyDown, true);
 
 		return () => {
-			unsubscribe();
-			document.removeEventListener('click', handleClick, true);
 			document.removeEventListener('keydown', handleKeyDown, true);
+			document.removeEventListener('click', handleClick, true);
+			unsubscribe();
 		};
 	});
 
 	return {
 		setDropdown,
 		setDropdownToggle,
-		show: { set, subscribe, toggle: () => set(!show) },
+		show: { set, subscribe },
 	};
 };
