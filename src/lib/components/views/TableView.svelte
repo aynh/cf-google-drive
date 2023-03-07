@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { sort, sorted, SortKey, SortOrder } from '$lib/stores/sort';
-	import type { FileValue } from '$lib/types';
+	import type { ViewComponentProperties } from '$lib/types';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import TableViewRow from './TableViewRow.svelte';
 	import TableViewHeader from './TableViewHeader.svelte';
 
-	export let promise: Promise<FileValue[]>;
+	export let promise: ViewComponentProperties['promise'];
 
 	const handleKeyClick = ({ detail: key }: CustomEvent<SortKey>) => {
 		$sort = {
@@ -32,7 +32,7 @@
 	</thead>
 	<tbody>
 		{#await promise}
-			<Spinner tag="tr" text="Loading data" />
+			<Spinner tag="tr" />
 		{:then items}
 			{#each $sorted(items) as value}
 				<TableViewRow {value} />

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { sort, sorted, SortKey, SortOrder } from '$lib/stores/sort';
-	import type { FileValue } from '$lib/types';
+	import type { ViewComponentProperties } from '$lib/types';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import GridVIewItem from './GridVIewItem.svelte';
 
-	export let promise: Promise<FileValue[]>;
+	export let promise: ViewComponentProperties['promise'];
 
 	const sortSelections = [SortKey.name, SortKey.modified, SortKey.size].flatMap((key) => {
 		return [SortOrder.ascending, SortOrder.descending].map((order) => {
@@ -38,7 +38,7 @@
 	</div>
 
 	{#await promise}
-		<Spinner text="Loading data" />
+		<Spinner />
 	{:then items}
 		<ol
 			class="list-none p-0 m-0 grid grid-auto-rows-[minmax(0,1fr)] grid-cols-3 md:grid-cols-4 lg:grid-cols-6"

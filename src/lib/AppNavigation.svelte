@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { offset, shift } from '@floating-ui/dom';
 	import { dropdown } from './dropdown';
+	import { url } from './stores/state';
 
-	$: ({ origin, pathname } = $page.url);
+	$: ({ origin, pathname } = $url);
 	$: paths = [origin, ...pathname.split('/').slice(1, -1)];
 	$: title = decodeURIComponent(pathname === '/' ? origin : pathname);
 

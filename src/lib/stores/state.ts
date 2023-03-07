@@ -1,9 +1,6 @@
 import { browser } from '$app/environment';
-import GridView from '$lib/components/views/GridView.svelte';
-import TableView from '$lib/components/views/TableView.svelte';
+import { navigating, page } from '$app/stores';
 import { git } from '$lib/constants';
-import type { FileValue } from '$lib/types';
-import type { SvelteComponentTyped } from 'svelte';
 import { derived, writable } from 'svelte/store';
 
 export enum ViewKind {
@@ -21,8 +18,6 @@ export interface State {
 	theme: ThemeKind;
 }
 
-export type ViewComponent = typeof SvelteComponentTyped<{ promise: Promise<FileValue[]> }>;
-
 export const state = writable<State>({ view: ViewKind.table, theme: ThemeKind.light });
 
 if (browser) {
@@ -37,15 +32,11 @@ if (browser) {
 	});
 }
 
-const viewMap: Record<ViewKind, ViewComponent> = {
-	[ViewKind.grid]: GridView,
-	[ViewKind.table]: TableView,
-};
-
-export const View = derived(
-	state,
-	($state, set) => {
-		set(viewMap[$state.view]);
+export const url = derived(
+	[navigating, page],
+	([$navigating, $page], set) => {
+		// this, to immediately show where they're navigating to, so navigating seems instantaneous
+		set($navigating?.to?.url ?? $page.url);
 	},
-	TableView as ViewComponent,
+	new URL(import.meta.url),
 );

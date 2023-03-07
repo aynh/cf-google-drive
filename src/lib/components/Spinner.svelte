@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let tag = 'div';
-	export let text: string;
+	export let text = 'Loading data';
 </script>
 
 <svelte:element this={tag} class="{$$props.class} relative h-65vh">

@@ -3,9 +3,7 @@
 	import AppFooter from '$lib/AppFooter.svelte';
 	import AppNavigation from '$lib/AppNavigation.svelte';
 	import AppToggleState from '$lib/AppToggleState.svelte';
-	import { sort, __sortDefault } from '$lib/stores/sort';
-	import { View } from '$lib/stores/state';
-	import { afterNavigate } from '$app/navigation';
+	import DynamicView from '$lib/components/views/DynamicView.svelte';
 	import { page } from '$app/stores';
 
 	export let data: PageData;
@@ -20,10 +18,6 @@
 			href: new URL(value.name, base).href,
 		}));
 	});
-
-	afterNavigate(() => {
-		sort.set(__sortDefault);
-	});
 </script>
 
 <svelte:head>
@@ -37,6 +31,6 @@
 	<AppToggleState class="flex-1 max-w-1/2 md:max-w-1/3 lg:max-w-1/4" />
 </div>
 
-<svelte:component this={$View} {promise} />
+<DynamicView {promise} />
 
 <AppFooter />
