@@ -35,7 +35,7 @@
 
 <div>
 	{#await componentPromise}
-		<Spinner class="border border-solid border-$text-main" text="Loading component..." />
+		<Spinner class="border border-solid" text="Loading component..." />
 	{:then component}
 		<svelte:component this={component} {promise} />
 	{/await}

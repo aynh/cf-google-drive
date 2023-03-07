@@ -1,0 +1,14 @@
+.focus() {
+	--uno: 'text-$text-focus bg-$background-focus';
+}
+
+:is(a, button, select):focus-visible {
+	.focus();
+}
+
+a,
+button:not(:disabled) {
+	&:hover {
+		.focus();
+	}
+}

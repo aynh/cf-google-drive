@@ -11,7 +11,7 @@
 	{href}
 	title={name}
 	data-sveltekit-reload={type === FileType.folder ? undefined : ''}
-	class="w-full h-full flex flex-col items-center justify-center text-center text-$text-main hover:text-$text-focus decoration-none hover:underline bg-$background-main hover:bg-$background-focus p-2 lg:p-4"
+	class="w-full h-full flex flex-col items-center justify-center text-center p-2 lg:p-4"
 >
 	<GridViewItemIcon {value} />
 	<span class="break-words line-clamp-2 w-full">{name}</span>

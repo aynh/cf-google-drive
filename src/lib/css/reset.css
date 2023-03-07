@@ -1,0 +1,9 @@
+@import 'the-new-css-reset/css/reset.css';
+
+a {
+	--uno: 'hover:underline';
+}
+
+button {
+	--uno: 'select-none cursor-pointer disabled:cursor-default';
+}

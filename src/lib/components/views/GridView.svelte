@@ -19,16 +19,14 @@
 	}
 </script>
 
-<div class="border border-solid border-$text-main">
-	<div
-		class="flex justify-end bg-$background-alt border border-b-solid border-$text-main py-2 px-4"
-	>
+<div class="border border-solid">
+	<div class="flex justify-end bg-$background-alt border border-b-solid py-2 px-4">
 		<div>
 			<label for="sort-by">sort by</label>
 			<select
 				bind:value={selectedSort}
 				id="sort-by"
-				class="bg-$background-main text-$text-main border border-$text-main"
+				class="bg-$background-main p-1 border border-solid"
 			>
 				{#each sortSelections as { name, value }}
 					<option {value}> {name} </option>
@@ -40,9 +38,7 @@
 	{#await promise}
 		<Spinner />
 	{:then items}
-		<ol
-			class="list-none p-0 m-0 grid grid-auto-rows-[minmax(0,1fr)] grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
-		>
+		<ol class="grid grid-auto-rows-[minmax(0,1fr)] grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
 			{#each $sorted(items) as value}
 				<li>
 					<GridVIewItem {value} />

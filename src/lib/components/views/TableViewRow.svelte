@@ -8,11 +8,11 @@
 	$: bytes = size < 0 ? '-' : prettyBytes(size);
 </script>
 
-<tr class="bg-$background-main hover:bg-$background-focus">
+<tr class="hover:bg-$background-focus">
 	<th scope="row" class="name-row">
 		<a
 			{href}
-			class="font-medium text-$text-focus decoration-none hover:underline"
+			class="text-$text-focus"
 			data-sveltekit-reload={type === FileType.folder ? undefined : ''}
 			title={name}
 		>

@@ -15,7 +15,7 @@
 		use:setDropdownToggle
 		on:click={() => show.toggle()}
 		aria-label="Toggle {name} dropdown"
-		class="flex lt-md:flex-row-reverse items-center -space-x-0.5 md:space-x-0.5 border border-solid border-$text-main ring-$text-focus focus:ring-2 rounded-lg py-1 px-2 md:px-3"
+		class="flex lt-md:flex-row-reverse items-center -space-x-0.5 md:space-x-0.5 border border-solid ring-$text-focus focus:ring-2 rounded-lg py-1 px-2 md:px-3"
 	>
 		<span> {name} </span>
 		<div class="i-lucide-chevron-down" />
@@ -24,7 +24,7 @@
 	{#if $show}
 		<div
 			use:setDropdown
-			class="z-1 absolute left-0 top-0 bg-$background-main rounded-lg p-1 md:p-1.5 ring-3 ring-$text-focus shadow-lg shadow-black/50"
+			class="z-1 absolute left-0 top-0 bg-$background-main rounded-lg p-1 md:p-1.5 ring-3 ring-$text-main shadow-lg shadow-black/50"
 		>
 			<slot />
 		</div>

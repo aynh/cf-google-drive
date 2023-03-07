@@ -18,7 +18,7 @@
 			<button
 				on:click={() => dispatch('key-click', key)}
 				title={`Sort by ${title.toLowerCase()}`}
-				class="uppercase inline-flex items-center border-none color-inherit bg-inherit hover:cursor-pointer"
+				class="uppercase inline-flex items-center"
 			>
 				{title}
 				<span class="i-lucide-chevrons-up-down w-3 h-3 ml-1" />

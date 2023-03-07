@@ -56,14 +56,14 @@
 		}
 
 		> :global(tbody) > :global(tr) {
-			--uno: 'border-b-solid border-l-solid border-r-solid';
+			--uno: 'border-solid border-t-none';
 		}
 
 		:global(tr) {
-			--uno: 'lt-lg:flex border border-$text-main';
+			--uno: 'lt-lg:flex border';
 
 			> :global(:where(.name-row, .modified-row)) {
-				--uno: 'border border-r-solid border-$text-main';
+				--uno: 'border border-r-solid';
 			}
 
 			> :global(:where(td, th)) {

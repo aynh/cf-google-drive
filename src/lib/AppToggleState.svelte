@@ -21,7 +21,7 @@
 	{#each items as [name, values]}
 		{@const type = name === 'theme' ? ThemeKind : ViewKind}
 		<AppToggleStateDropdown {name}>
-			<ul class="list-none p-0 my-0 flex flex-col space-y-1">
+			<ul class="flex flex-col space-y-1">
 				{#each values as value}
 					{@const key = type[value]}
 					<li>
@@ -29,7 +29,7 @@
 							disabled={$state[name] === value}
 							on:click={() => handleClick(name, value)}
 							aria-label="Toggle {key} {name}"
-							class="w-full flex space-x-1 items-center border border-solid disabled:border-dashed border-$text-alt rounded-sm px-1"
+							class="w-full flex space-x-1 items-center border border-solid disabled:border-dashed rounded-sm px-1"
 						>
 							<div class="{key}-icon" />
 							<span class="text-lg">{key}</span>
@@ -43,7 +43,7 @@
 
 <style lang="less">
 	.toggle-state :global(button) {
-		--uno: 'capitalize text-sm md:text-lg md:font-semibold bg-$background-alt hover:not-disabled:bg-$background-focus text-$text-main disabled:text-$text-alt hover:not-disabled:text-$text-focus not-disabled:cursor-pointer';
+		--uno: 'capitalize text-sm md:text-lg md:font-semibold';
 	}
 
 	.dark-icon {
