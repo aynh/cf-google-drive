@@ -2,8 +2,8 @@
 	import { sort, sorted, SortKey, SortOrder } from '$lib/stores/sort';
 	import type { ViewComponentProperties } from '$lib/types';
 	import Spinner from '$lib/components/Spinner.svelte';
+	import TableViewHeaderRow from './TableViewHeaderRow.svelte';
 	import TableViewRow from './TableViewRow.svelte';
-	import TableViewHeader from './TableViewHeader.svelte';
 
 	export let promise: ViewComponentProperties['promise'];
 
@@ -19,16 +19,9 @@
 	};
 </script>
 
-<table class="table-fixed w-full text-sm text-left">
+<table class="table-fixed border-collapse w-full text-sm">
 	<thead>
-		<TableViewHeader
-			on:key-click={handleKeyClick}
-			values={[
-				{ title: 'Name', key: SortKey.name },
-				{ title: 'Last Modified', key: SortKey.modified },
-				{ title: 'Size', key: SortKey.size },
-			]}
-		/>
+		<TableViewHeaderRow on:key-click={handleKeyClick} />
 	</thead>
 	<tbody>
 		{#await promise}
@@ -42,45 +35,29 @@
 </table>
 
 <style lang="less">
-	table,
-	thead,
-	tbody {
-		--uno: 'lt-lg:block';
+	:where(table, thead, tbody) {
+		--uno: 'lt-lg:block divide-y';
 	}
 
 	table {
-		--uno: 'border-collapse';
-
-		> :global(thead) > :global(tr) {
-			--uno: 'border-solid';
-		}
-
-		> :global(tbody) > :global(tr) {
-			--uno: 'border-solid border-t-none';
-		}
-
 		:global(tr) {
-			--uno: 'lt-lg:flex border';
+			--uno: 'lt-lg:flex divide-x';
+		}
 
-			> :global(:where(.name-row, .modified-row)) {
-				--uno: 'border border-r-solid';
-			}
+		:global(:where(td, th)) {
+			--uno: 'px-3 md:px-5 lg:px-6 py-2 md:py-3 lg:py-4';
+		}
 
-			> :global(:where(td, th)) {
-				--uno: 'px-3 md:px-5 lg:px-6 py-2 md:py-3';
-			}
+		:global(.name-row) {
+			--uno: 'lt-md:w-70% lt-lg:w-80%';
+		}
 
-			> :global(.name-row) {
-				--uno: 'lt-md:w-7/10 lt-lg:w-4/5 truncate';
-			}
+		:global(.modified-row) {
+			--uno: 'lt-lg:hidden w-18%';
+		}
 
-			> :global(.modified-row) {
-				--uno: 'lt-lg:hidden lg:w-15%';
-			}
-
-			> :global(.size-row) {
-				--uno: 'lg:w-10% lt-lg:flex-1';
-			}
+		:global(.size-row) {
+			--uno: 'lg:w-10% flex-1';
 		}
 	}
 </style>

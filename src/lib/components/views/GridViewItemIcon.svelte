@@ -3,13 +3,13 @@
 	import FileTypeIcon from '$lib/components/FileTypeIcon.svelte';
 
 	export let value: FileValue;
-	$: ({ href, name, thumbnail, type } = value);
+	$: ({ href, name, hasThumbnail, type } = value);
 
 	let imageLoaded = false; // show a placeholder if image is not loaded
 </script>
 
-<div class="icon relative w-24 md:w-36 h-24 md:h-36">
-	{#if thumbnail}
+<div class:mb-1.5={hasThumbnail} class="icon relative w-24 md:w-36 h-24 md:h-36">
+	{#if hasThumbnail}
 		<img
 			on:load={() => (imageLoaded = true)}
 			loading="lazy"
@@ -35,12 +35,14 @@
 	{/if}
 </div>
 
-<style>
-	.icon > :global(:not(.thumbnail-icon)) {
-		--uno: 'absolute inset-0 h-inherit w-inherit rounded-lg';
-	}
+<style lang="less">
+	.icon {
+		> :global(:not(.thumbnail-icon)) {
+			--uno: 'absolute inset-0 h-inherit w-inherit rounded-lg';
+		}
 
-	.icon:hover > :global(.thumbnail-icon) {
-		--uno: 'opacity-0';
+		&:hover > :global(.thumbnail-icon) {
+			--uno: 'opacity-0';
+		}
 	}
 </style>

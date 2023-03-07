@@ -1,3 +1,4 @@
+import { building } from '$app/environment';
 import {
 	APP_CLIENT_ID,
 	APP_CLIENT_SECRET,
@@ -88,6 +89,10 @@ export const handleThumbnail = async ({ locals: { pathValue, token } }: RequestE
 export const resolvePathValue = async ({ url, locals: { token } }: RequestEvent) => {
 	// use APP_FOLDER_ID environment variable OR fallback to root folder id if it's falsy
 	const root = APP_FOLDER_ID || (await get(token, 'root')).id;
+	if (building) {
+		return get(token, root);
+	}
+
 	const resolved = await resolve(token, root, url.pathname);
 
 	if (resolved === undefined) {

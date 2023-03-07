@@ -27,15 +27,15 @@
 	beforeNavigate(({ from, to }) => {
 		if (from?.url.pathname !== to?.url.pathname && to?.params !== undefined) {
 			// set promise to a promise that won't resolve to simulate a loading,
-			// it will be replaced with the actual promise after navigation done
+			// it will be replaced with the actual promise after navigation is done
 			promise = new Promise(() => {});
 		}
 	});
 </script>
 
-<div>
+<div class="border border-solid">
 	{#await componentPromise}
-		<Spinner class="border border-solid" text="Loading component..." />
+		<Spinner text="Loading component" />
 	{:then component}
 		<svelte:component this={component} {promise} />
 	{/await}

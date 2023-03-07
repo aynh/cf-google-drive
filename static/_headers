@@ -1,0 +1,5 @@
+# sometime pages doesn't send Content-Type header
+/_app/immutable/*.js
+  Content-Type: text/javascript
+/_app/immutable/*.css
+  Content-Type: text/css

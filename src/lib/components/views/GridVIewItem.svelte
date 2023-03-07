@@ -11,15 +11,17 @@
 	{href}
 	title={name}
 	data-sveltekit-reload={type === FileType.folder ? undefined : ''}
-	class="w-full h-full flex flex-col items-center justify-center text-center p-2 lg:p-4"
+	class="w-full h-full flex flex-col items-center text-center p-2 lg:p-4"
 >
 	<GridViewItemIcon {value} />
-	<span class="break-words line-clamp-2 w-full">{name}</span>
+	<div class="flex flex-1 items-center justify-center w-full">
+		<span class="break-words line-clamp-2">{name}</span>
+	</div>
 </a>
 
 <style>
 	/* .thumbnail-icon is in GridViewItemIcon.svelte */
 	a:hover :global(.thumbnail-icon) {
-		--uno: 'opacity-25';
+		--uno: 'opacity-50';
 	}
 </style>

@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import { navigating, page } from '$app/stores';
 import { git } from '$lib/constants';
-import { derived, writable } from 'svelte/store';
+import { derived, writable, type Readable } from 'svelte/store';
 
 export enum ViewKind {
 	grid,
@@ -18,25 +18,30 @@ export interface State {
 	theme: ThemeKind;
 }
 
-export const state = writable<State>({ view: ViewKind.table, theme: ThemeKind.light });
-
-if (browser) {
+const createState = () => {
 	const key = `state-${git.hash}`;
-	const value = localStorage.getItem(key);
-	if (typeof value === 'string') {
-		state.set(JSON.parse(value));
+
+	let init: State = { view: ViewKind.table, theme: ThemeKind.light };
+	if (browser) {
+		try {
+			init = { ...init, ...JSON.parse(localStorage.getItem(key) || '{}') };
+		} catch (_) {}
 	}
 
-	state.subscribe(($state) => {
-		localStorage.setItem(key, JSON.stringify($state));
-	});
-}
+	const store = writable(init);
+	if (browser) {
+		store.subscribe((value) => {
+			localStorage.setItem(key, JSON.stringify(value));
+			document.documentElement.className = ThemeKind[value.theme];
+		});
+	}
 
-export const url = derived(
-	[navigating, page],
-	([$navigating, $page], set) => {
-		// this, to immediately show where they're navigating to, so navigating seems instantaneous
-		set($navigating?.to?.url ?? $page.url);
-	},
-	new URL(import.meta.url),
-);
+	return store;
+};
+
+export const state = createState();
+
+export const url: Readable<URL> = derived([navigating, page], ([$navigating, $page], set) => {
+	// this, to immediately show where they're navigating to, so navigating seems instantaneous
+	set($navigating?.to?.url ?? $page.url);
+});

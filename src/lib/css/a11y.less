@@ -6,9 +6,6 @@
 	.focus();
 }
 
-a,
-button:not(:disabled) {
-	&:hover {
-		.focus();
-	}
+:is(a, button):not(:disabled):hover {
+	.focus();
 }

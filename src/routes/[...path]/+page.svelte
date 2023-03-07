@@ -1,22 +1,23 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import { page } from '$app/stores';
 	import AppFooter from '$lib/AppFooter.svelte';
 	import AppNavigation from '$lib/AppNavigation.svelte';
 	import AppToggleState from '$lib/AppToggleState.svelte';
 	import DynamicView from '$lib/components/views/DynamicView.svelte';
-	import { decompact } from '$lib/compact';
-	import { page } from '$app/stores';
+	import { decompact } from '$lib/utilities/compact';
+	import { url } from '$lib/stores/state';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: ({ pathname: path } = $page.url);
-	$: promise = data.promise.items.then((values) => {
+	$: ({ pathname: path } = $url);
+	$: promise = data.items.promise.then((values) => {
 		const base = new URL($page.url);
 		// ensure base ends with / to make new URL with base work as expected
 		base.pathname = base.pathname.replace(/[^\/]$/, '$&/');
 
 		return values.map(decompact).map((value) => ({
 			...value,
-			href: new URL(value.name, base).href,
+			href: new URL(encodeURIComponent(value.name), base).href,
 		}));
 	});
 </script>

@@ -2,13 +2,13 @@ import type { SvelteComponentTyped } from 'svelte';
 import type { FileType } from './filetype';
 
 export interface FileValue {
+	hasThumbnail: boolean;
 	name: string;
 	modified: string;
 	size: number;
-	thumbnail: boolean;
 	type: FileType;
 
-	// href is urlencoded name, it is populated client-side
+	// href is the full path of the file, including the website url; it is populated client-side
 	href: string;
 }
 
