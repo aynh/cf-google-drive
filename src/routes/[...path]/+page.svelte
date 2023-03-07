@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import AppFooter from '$lib/AppFooter.svelte';
+	import AppNavigation from '$lib/AppNavigation.svelte';
 	import AppToggleState from '$lib/AppToggleState.svelte';
 	import { sort, __sortDefault } from '$lib/stores/sort';
 	import { View } from '$lib/stores/state';
@@ -30,10 +31,10 @@
 </svelte:head>
 
 <div
-	class="flex space-x-2 items-center justify-between p-2 pr-3 bg-$background-alt mb-1 lg:mb-2 border border-solid border-$text-main"
+	class="flex items-center justify-between bg-$background-alt mb-1 lg:mb-2 border border-solid border-$text-main"
 >
-	<div />
-	<AppToggleState />
+	<AppNavigation class="w-max max-w-1/2 md:max-w-2/3 lg:max-w-3/4" />
+	<AppToggleState class="flex-1 max-w-1/2 md:max-w-1/3 lg:max-w-1/4" />
 </div>
 
 <svelte:component this={$View} {promise} />
