@@ -4,6 +4,7 @@
 	import AppNavigation from '$lib/AppNavigation.svelte';
 	import AppToggleState from '$lib/AppToggleState.svelte';
 	import DynamicView from '$lib/components/views/DynamicView.svelte';
+	import { decompact } from '$lib/compact';
 	import { page } from '$app/stores';
 
 	export let data: PageData;
@@ -13,7 +14,7 @@
 		// ensure base ends with / to make new URL with base work as expected
 		base.pathname = base.pathname.replace(/[^\/]$/, '$&/');
 
-		return values.map((value) => ({
+		return values.map(decompact).map((value) => ({
 			...value,
 			href: new URL(value.name, base).href,
 		}));

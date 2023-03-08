@@ -1,3 +1,4 @@
+import { compact } from '$lib/compact';
 import { resolveFileType, FileType } from '$lib/filetype';
 import { GoogleDriveV3Error } from '$lib/server/google-drive-v3/error';
 import { GOOGLE_DRIVE_V3_FOLDER_MIME } from '$lib/server/google-drive-v3/files';
@@ -33,13 +34,13 @@ export const load = (async ({ locals, url }) => {
 
 						const size_ = size !== undefined ? Number.parseInt(size) : -1;
 
-						return {
+						return compact({
 							name,
 							modified,
 							size: size_,
 							thumbnail: thumbnailLink !== undefined,
 							type,
-						};
+						});
 					}),
 				),
 			},
