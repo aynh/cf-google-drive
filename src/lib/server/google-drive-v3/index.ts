@@ -4,8 +4,9 @@ import { list } from './files/list';
 import type { GoogleDriveV3TestContext } from './setup-test';
 
 export const resolve = async (token: string, root: string, path: string) => {
+	if (path === '/') return get(token, root);
+
 	const paths = path.split('/').map(decodeURIComponent).slice(1);
-	if (paths.length === 0) return get(token, root);
 
 	let current: Partial<FileResource> = {};
 	while (paths.length > 0) {
@@ -26,6 +27,7 @@ if (import.meta.vitest) {
 	const { expect, describe, it } = import.meta.vitest;
 
 	describe.each([
+		{ path: '/' }, // root folder
 		{ path: '/a.txt' },
 		{ path: '/nested/directory' },
 		{ path: '/nested/directory%20with%20%2F' }, // directory with /
