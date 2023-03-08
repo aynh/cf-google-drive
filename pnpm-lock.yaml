@@ -1,34 +1,34 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@cloudflare/workers-types': 4.20230228.0
+  '@cloudflare/workers-types': 4.20230307.0
   '@sveltejs/adapter-auto': 2.0.0
-  '@sveltejs/adapter-cloudflare': 2.1.0
-  '@sveltejs/kit': 1.9.1
+  '@sveltejs/adapter-cloudflare': 2.2.0
+  '@sveltejs/kit': 1.11.0
   prettier: 2.8.4
   prettier-plugin-svelte: 2.9.0
   svelte: 3.55.1
-  svelte-check: 3.0.4
+  svelte-check: 3.1.0
   tslib: 2.5.0
   typescript: 4.9.5
   vite: 4.1.4
   vitest: 0.29.2
-  wrangler: 2.12.0
+  wrangler: 2.12.2
 
 devDependencies:
-  '@cloudflare/workers-types': 4.20230228.0
-  '@sveltejs/adapter-auto': 2.0.0_@sveltejs+kit@1.9.1
-  '@sveltejs/adapter-cloudflare': 2.1.0_@sveltejs+kit@1.9.1
-  '@sveltejs/kit': 1.9.1_svelte@3.55.1+vite@4.1.4
+  '@cloudflare/workers-types': 4.20230307.0
+  '@sveltejs/adapter-auto': 2.0.0_@sveltejs+kit@1.11.0
+  '@sveltejs/adapter-cloudflare': 2.2.0_@sveltejs+kit@1.11.0
+  '@sveltejs/kit': 1.11.0_svelte@3.55.1+vite@4.1.4
   prettier: 2.8.4
   prettier-plugin-svelte: 2.9.0_jrsxveqmsx2uadbqiuq74wlc4u
   svelte: 3.55.1
-  svelte-check: 3.0.4_svelte@3.55.1
+  svelte-check: 3.1.0_svelte@3.55.1
   tslib: 2.5.0
   typescript: 4.9.5
   vite: 4.1.4
   vitest: 0.29.2
-  wrangler: 2.12.0
+  wrangler: 2.12.2
 
 packages:
 
@@ -38,8 +38,8 @@ packages:
       mime: 3.0.0
     dev: true
 
-  /@cloudflare/workers-types/4.20230228.0:
-    resolution: {integrity: sha512-tDaqH3DrKmDoe/YrCnzVSqjNH6GnUOOajv2Ztj2h7BPLFyYTb81iCkARgb+G4bpxhn7y4f1KxxDT2+Yp4rt7Hg==}
+  /@cloudflare/workers-types/4.20230307.0:
+    resolution: {integrity: sha512-Go968aDDcqONHQcUdgIiPRkPdT4QTzD0ecHJsI1u7ZiHPMOoZn+Dy7hYsdUJ5ldX9wTZDrICBM1rDKTRaDUitg==}
     dev: true
 
   /@esbuild-plugins/node-globals-polyfill/0.1.1_esbuild@0.16.3:
@@ -672,28 +672,28 @@ packages:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: true
 
-  /@sveltejs/adapter-auto/2.0.0_@sveltejs+kit@1.9.1:
+  /@sveltejs/adapter-auto/2.0.0_@sveltejs+kit@1.11.0:
     resolution: {integrity: sha512-b+gkHFZgD771kgV3aO4avHFd7y1zhmMYy9i6xOK7m/rwmwaRO8gnF5zBc0Rgca80B2PMU1bKNxyBTHA14OzUAQ==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.9.1_svelte@3.55.1+vite@4.1.4
+      '@sveltejs/kit': 1.11.0_svelte@3.55.1+vite@4.1.4
       import-meta-resolve: 2.2.1
     dev: true
 
-  /@sveltejs/adapter-cloudflare/2.1.0_@sveltejs+kit@1.9.1:
-    resolution: {integrity: sha512-1HXAk+91tlRHfovY6NIH1/ntAHOiraNe8NeoNNyMweR4tEnaIgaL1czaTfpfqXcXvaA09EFIaHBPxU2xzT92kA==}
+  /@sveltejs/adapter-cloudflare/2.2.0_@sveltejs+kit@1.11.0:
+    resolution: {integrity: sha512-B3GQtdPBLHG1eTjOUCjTOqlkTEuYbeSFFw984sEclWxNnLgj3dO6DY8pRTVyrltwNtKRG/7W+ltPVzcbcn30Dg==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@cloudflare/workers-types': 4.20230228.0
-      '@sveltejs/kit': 1.9.1_svelte@3.55.1+vite@4.1.4
+      '@cloudflare/workers-types': 4.20230307.0
+      '@sveltejs/kit': 1.11.0_svelte@3.55.1+vite@4.1.4
       esbuild: 0.16.17
       worktop: 0.8.0-next.14
     dev: true
 
-  /@sveltejs/kit/1.9.1_svelte@3.55.1+vite@4.1.4:
-    resolution: {integrity: sha512-SC2pTnaloAL+6744tWl1/b1zGAhZX2zmgmUmKV4Y6nx/y5gP6+MTzY6SC74PYUWSlOPumi8wZ40hQ2RExCFuhg==}
+  /@sveltejs/kit/1.11.0_svelte@3.55.1+vite@4.1.4:
+    resolution: {integrity: sha512-PwViZcMoLgEU/jhLoSyjf5hSrHS67wvSm0ifBo4prP9irpGa5HuPOZeVDTL5tPDSBoKxtdYi1zlGdoiJfO86jA==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
     requiresBuild: true
@@ -1849,8 +1849,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /svelte-check/3.0.4_svelte@3.55.1:
-    resolution: {integrity: sha512-feIyBAA5cSIxq4vq6mwGvGQTHy/wBVQbs5b+/VvE21WN8X7nonAuSqwvZv0UDBowzRka3Rh4gmLPH8rPePz3/w==}
+  /svelte-check/3.1.0_svelte@3.55.1:
+    resolution: {integrity: sha512-aSdnsGtndfqtb0dmN5qm9Zjl7wGpqh3cWF35WVCcK96TmGn2NEar4M40QW6bvaPPu089mrkZdpeD3Yar2SERBg==}
     hasBin: true
     peerDependencies:
       svelte: ^3.55.0
@@ -2187,8 +2187,8 @@ packages:
       regexparam: 2.0.1
     dev: true
 
-  /wrangler/2.12.0:
-    resolution: {integrity: sha512-yAqv3JbJqkB1oaciI2CGEiEscQ98BXaFN+Z7VbWuepMqVL2UV2wUjA2mJLjWuoZOwSmC74MsDzZ+5hzDs/2Nkg==}
+  /wrangler/2.12.2:
+    resolution: {integrity: sha512-pjdZvcjiFD6mI3Nncsw3hBv3rxjMx0n4Mtp+Tsql/hvr0LpOmHKlW/aMeYx/fVUmjEKfWBSULc1vgM02O2UTWQ==}
     engines: {node: '>=16.13.0'}
     hasBin: true
     dependencies:
