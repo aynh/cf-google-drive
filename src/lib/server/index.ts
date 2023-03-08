@@ -65,12 +65,9 @@ export const handleDownload = async ({ locals: { pathValue, token }, request }: 
 };
 
 export const resolvePathValue = async ({ url, locals: { token } }: RequestEvent) => {
-	// decode the path and remove trailing slash
-	const path = decodeURIComponent(url.pathname).replace(/\/$/g, '');
-
 	// use APP_FOLDER_ID environment variable OR fallback to root folder id if it's falsy
 	const root = APP_FOLDER_ID || (await get(token, 'root')).id;
-	const resolved = await resolve(token, root, path);
+	const resolved = await resolve(token, root, url.pathname);
 
 	if (resolved === undefined) {
 		throw error(404);
