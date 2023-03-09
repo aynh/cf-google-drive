@@ -10,7 +10,7 @@
 	] as const;
 </script>
 
-<tr class="lt-lg:text-xs bg-$background-alt">
+<tr class="lt-lg:text-xs bgfg-alt border border-b-solid">
 	{#each headers as [title, key]}
 		<th scope="col" class={`${SortKey[key]}-row`}>
 			<button

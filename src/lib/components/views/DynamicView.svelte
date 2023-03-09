@@ -33,7 +33,7 @@
 	});
 </script>
 
-<div class="border border-solid">
+<div class="border border-solid bgfg-main">
 	{#await componentPromise}
 		<Spinner text="Loading component" />
 	{:then component}

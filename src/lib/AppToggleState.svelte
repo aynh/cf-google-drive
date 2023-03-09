@@ -18,7 +18,7 @@
 	{#each items as [type, values]}
 		{@const kind = type === 'theme' ? ThemeKind : ViewKind}
 		<AppToggleStateDropdown name={type}>
-			<ul class="flex flex-col space-y-1">
+			<ul class="flex flex-col space-y-1 w-max">
 				{#each values as value}
 					{@const name = kind[value]}
 					<li>
@@ -26,10 +26,10 @@
 							disabled={$state[type] === value}
 							on:click={() => handleClick(type, value)}
 							aria-label="Toggle {name} {type}"
-							class="w-full flex space-x-1.5 items-center border border-solid disabled:border-dashed rounded-sm px-1"
+							class="w-full flex space-x-1.5 items-center ring-$fg-main border border-solid disabled:border-dashed rounded-sm px-1"
 						>
-							<div class="{type}-{name}" />
-							<span class="text-lg">{name}</span>
+							<div class="{type} {name}" />
+							<span class="text-lg">{name.replace('-', ' ')}</span>
 						</button>
 					</li>
 				{/each}
@@ -41,24 +41,28 @@
 <style lang="less">
 	div :global(button) {
 		--uno: 'capitalize text-sm md:text-lg md:font-semibold';
+
+		&:not(:disabled) {
+			--uno: 'focus:ring-2';
+		}
 	}
 
 	.view {
-		&-grid {
+		&.grid {
 			--uno: 'i-lucide-layout-grid';
 		}
 
-		&-table {
+		&.table {
 			--uno: 'i-lucide-list';
 		}
 	}
 
 	.theme {
-		&-light {
+		&[class*='light'] {
 			--uno: 'i-lucide-sun';
 		}
 
-		&-dark {
+		&[class*='dark'] {
 			--uno: 'i-lucide-moon';
 		}
 	}

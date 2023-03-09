@@ -1,22 +1,20 @@
+@import 'the-new-css-reset/css/reset.css';
 @import './a11y.less';
-@import './reset.css';
 
 :root {
-	--uno: 'bg-$background-main text-$text-main';
+	--uno: 'bgfg-main';
 
-	--text-alt: theme('colors.gray.500');
-	--text-main: theme('colors.gray.600');
-	--text-focus: theme('colors.gray.900');
-	--background-alt: theme('colors.gray.100');
-	--background-main: theme('colors.gray.50');
-	--background-focus: theme('colors.gray.200');
+	@import './themes/default.less';
 
-	&.dark {
-		--text-alt: theme('colors.gray.400');
-		--text-main: theme('colors.gray.300');
-		--text-focus: theme('colors.white');
-		--background-alt: theme('colors.gray.700');
-		--background-main: theme('colors.gray.800');
-		--background-focus: theme('colors.gray.600');
+	&.breeze {
+		@import './themes/breeze.less';
+	}
+
+	&.github {
+		@import './themes/github.less';
+	}
+
+	&.solarized {
+		@import './themes/solarized.less';
 	}
 }

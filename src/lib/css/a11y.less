@@ -1,11 +1,15 @@
-.focus() {
-	--uno: 'text-$text-focus bg-$background-focus';
+a {
+	&:hover,
+	&:focus-visible {
+		--uno: 'underline';
+	}
 }
 
+button {
+	--uno: 'select-none not-disabled:cursor-pointer';
+}
+
+:where(a, button):not(:disabled):hover,
 :is(a, button, select):focus-visible {
-	.focus();
-}
-
-:is(a, button):not(:disabled):hover {
-	.focus();
+	--uno: 'bgfg-focus';
 }

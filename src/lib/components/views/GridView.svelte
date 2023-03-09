@@ -20,14 +20,10 @@
 </script>
 
 <div>
-	<div class="flex justify-end bg-$background-alt border border-b-solid py-2 px-4">
+	<div class="flex justify-end bgfg-alt border border-b-solid py-2 px-4">
 		<div>
 			<label for="sort-by">sort by</label>
-			<select
-				bind:value={selectedSort}
-				id="sort-by"
-				class="bg-$background-main p-1 border border-solid"
-			>
+			<select bind:value={selectedSort} id="sort-by" class="bgfg-main p-1 border border-solid">
 				{#each sorts as { name, value }}
 					<option {value}> {name} </option>
 				{/each}

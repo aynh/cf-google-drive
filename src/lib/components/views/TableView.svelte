@@ -23,7 +23,7 @@
 	<thead>
 		<TableViewHeaderRow on:key-click={handleKeyClick} />
 	</thead>
-	<tbody>
+	<tbody class="divide-y">
 		{#await promise}
 			<Spinner tag="tr" />
 		{:then items}
@@ -36,7 +36,7 @@
 
 <style lang="less">
 	:where(table, thead, tbody) {
-		--uno: 'lt-lg:block divide-y';
+		--uno: 'lt-lg:block';
 	}
 
 	table {
