@@ -15,4 +15,5 @@ export default defineConfig({
 			},
 		],
 	],
+	shortcuts: [[/^bgfg-(alt|focus|main)$/, ([, c]) => `bg-$bg-${c} text-$fg-${c}`]],
 });

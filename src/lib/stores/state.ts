@@ -11,6 +11,12 @@ export enum ViewKind {
 export enum ThemeKind {
 	dark,
 	light,
+	'breeze-dark',
+	'breeze-light',
+	'github-dark',
+	'github-light',
+	'solarized-dark',
+	'solarized-light',
 }
 
 export interface State {
@@ -21,7 +27,7 @@ export interface State {
 const createState = () => {
 	const key = `state-${git.hash}`;
 
-	let init: State = { view: ViewKind.table, theme: ThemeKind.light };
+	let init: State = { view: ViewKind.table, theme: ThemeKind.dark };
 	if (browser) {
 		try {
 			init = { ...init, ...JSON.parse(localStorage.getItem(key) || '{}') };
@@ -30,9 +36,15 @@ const createState = () => {
 
 	const store = writable(init);
 	if (browser) {
+		const classes = (
+			Object.values(ThemeKind).filter((value) => typeof value === 'string') as string[]
+		).flatMap((value) => value.split('-'));
+
 		store.subscribe((value) => {
 			localStorage.setItem(key, JSON.stringify(value));
-			document.documentElement.className = ThemeKind[value.theme];
+
+			document.documentElement.classList.remove(...classes);
+			document.documentElement.classList.add(...ThemeKind[value.theme].split('-'));
 		});
 	}
 

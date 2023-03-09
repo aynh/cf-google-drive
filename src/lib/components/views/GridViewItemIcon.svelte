@@ -20,13 +20,13 @@
 		/>
 
 		{#if !imageLoaded}
-			<div class="bg-$background-alt animate-pulse">
-				<div class="absolute-center text-$text-alt h-1/2 w-1/2 i-lucide-image" />
+			<div class="bgfg-alt animate-pulse">
+				<div class="absolute-center h-1/2 w-1/2 i-lucide-image" />
 			</div>
 		{/if}
 
 		<div
-			class="thumbnail-icon transition-opacity-200 absolute bottom-0 left-0 bg-$background-focus h-3/10 w-3/10 p-1 rounded-tr-lg rounded-bl-lg"
+			class="thumbnail-icon transition-opacity-200 absolute bottom-0 left-0 bgfg-focus h-3/10 w-3/10 p-1 rounded-tr-lg"
 		>
 			<FileTypeIcon {type} class="h-full w-full" />
 		</div>

@@ -1,0 +1,9 @@
+.theme(@bg-focus, @bg-main, @bg-alt, @fg-focus, @fg-main, @fg-alt: undefined) {
+	--bg-focus: @bg-focus;
+	--bg-main: @bg-main;
+	--bg-alt: @bg-alt;
+	--fg-focus: @fg-focus;
+	--fg-main: @fg-main;
+
+	--fg-alt: if(iscolor(@fg-alt), @fg-alt, @fg-main);
+}

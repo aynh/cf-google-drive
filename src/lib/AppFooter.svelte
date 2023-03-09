@@ -32,7 +32,7 @@
 	}
 
 	a {
-		--uno: 'flex text-$text-focus underline';
+		--uno: 'flex underline';
 
 		:global(div) {
 			--uno: 'mr-1.5';

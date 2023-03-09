@@ -9,14 +9,9 @@
 	$: isFolder = type === FileType.folder;
 </script>
 
-<tr class="hover:bg-$background-focus">
+<tr class="hover:bgfg-focus hover:divide-$fg-focus">
 	<th scope="row" class="name-row truncate">
-		<a
-			{href}
-			class="text-$text-focus"
-			data-sveltekit-reload={isFolder ? undefined : ''}
-			title={name}
-		>
+		<a {href} data-sveltekit-reload={isFolder ? undefined : ''} title={name}>
 			{isFolder ? `${name}/` : name}
 		</a>
 	</th>
