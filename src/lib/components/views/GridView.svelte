@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { sort, sorted, SortKey, SortOrder } from '$lib/stores/sort';
 	import type { ViewComponentProperties } from '$lib/types';
+	import EmptyFolder from '$lib/components/EmptyFolder.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import GridVIewItem from './GridVIewItem.svelte';
 
@@ -34,12 +35,16 @@
 	{#await promise}
 		<Spinner />
 	{:then items}
-		<ol class="grid grid-auto-rows-[minmax(0,1fr)] grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-			{#each $sorted(items) as value}
-				<li>
-					<GridVIewItem {value} />
-				</li>
-			{/each}
-		</ol>
+		{#if items.length === 0}
+			<EmptyFolder />
+		{:else}
+			<ol class="grid grid-auto-rows-[minmax(0,1fr)] grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+				{#each $sorted(items) as value}
+					<li>
+						<GridVIewItem {value} />
+					</li>
+				{/each}
+			</ol>
+		{/if}
 	{/await}
 </div>

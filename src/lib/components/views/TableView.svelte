@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { sort, sorted, SortKey, SortOrder } from '$lib/stores/sort';
 	import type { ViewComponentProperties } from '$lib/types';
+	import EmptyFolder from '$lib/components/EmptyFolder.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import TableViewHeaderRow from './TableViewHeaderRow.svelte';
 	import TableViewRow from './TableViewRow.svelte';
@@ -27,9 +28,13 @@
 		{#await promise}
 			<Spinner tag="tr" />
 		{:then items}
-			{#each $sorted(items) as value}
-				<TableViewRow {value} />
-			{/each}
+			{#if items.length === 0}
+				<EmptyFolder tag="tr" />
+			{:else}
+				{#each $sorted(items) as value}
+					<TableViewRow {value} />
+				{/each}
+			{/if}
 		{/await}
 	</tbody>
 </table>
