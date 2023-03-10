@@ -1,7 +1,8 @@
 export const GOOGLE_DRIVE_V3_FOLDER_MIME = 'application/vnd.google-apps.folder';
 
 export const GOOGLE_DRIVE_V3_FILES_URL = 'https://www.googleapis.com/drive/v3/files/';
-export const GOOGLE_DRIVE_V3_FILES_FIELDS = 'id, name, modifiedTime, mimeType, parents, size';
+export const GOOGLE_DRIVE_V3_FILES_FIELDS =
+	'id, name, modifiedTime, mimeType, parents, size, thumbnailLink';
 
 export interface FileResource {
 	/** The ID of the file. */
@@ -21,6 +22,9 @@ export interface FileResource {
 
 	/** The size of the file's content in bytes. */
 	size?: string;
+
+	/** A short-lived link to the file's thumbnail, if available. */
+	thumbnailLink?: string;
 }
 
 export interface FilesParameters {

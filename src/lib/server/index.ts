@@ -1,3 +1,4 @@
+import { building } from '$app/environment';
 import {
 	APP_CLIENT_ID,
 	APP_CLIENT_SECRET,
@@ -9,6 +10,7 @@ import { fetchAccessToken } from './google-drive-v3/oauth';
 import { resolve } from './google-drive-v3';
 import { download } from './google-drive-v3/files/download';
 import { get } from './google-drive-v3/files/get';
+import { fetchGoogleDriveV3Raw } from './google-drive-v3/util';
 
 const TOKEN_KV_KEY = '__access_token';
 
@@ -64,9 +66,33 @@ export const handleDownload = async ({ locals: { pathValue, token }, request }: 
 	return new Response(body, { status: response.status, headers });
 };
 
+export const handleThumbnail = async ({ locals: { pathValue, token } }: RequestEvent) => {
+	if (pathValue.thumbnailLink === undefined) {
+		throw error(404);
+	}
+
+	const response = await fetchGoogleDriveV3Raw(pathValue.thumbnailLink, { token });
+
+	const headers = {
+		...Object.fromEntries(
+			// copy some headers from original response
+			['content-disposition', 'content-length', 'content-type'].map((key) => {
+				return [key, response.headers.get(key)!];
+			}),
+		),
+		'last-modified': new Date(pathValue.modifiedTime).toUTCString(),
+	};
+
+	return new Response(response.body, { headers });
+};
+
 export const resolvePathValue = async ({ url, locals: { token } }: RequestEvent) => {
 	// use APP_FOLDER_ID environment variable OR fallback to root folder id if it's falsy
 	const root = APP_FOLDER_ID || (await get(token, 'root')).id;
+	if (building) {
+		return get(token, root);
+	}
+
 	const resolved = await resolve(token, root, url.pathname);
 
 	if (resolved === undefined) {

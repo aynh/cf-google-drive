@@ -28,6 +28,15 @@ describe('files methods', () => {
 
 	it<GoogleDriveV3TestContext>('should get', async ({ token }) => {
 		const getResult = await get(token, aTxt!.id);
+
+		if (aTxt?.thumbnailLink === undefined) {
+			expect(getResult.thumbnailLink).toBeUndefined();
+		} else {
+			expect(getResult.thumbnailLink).toBeDefined();
+		}
+
+		// might change between requests
+		getResult.thumbnailLink = aTxt?.thumbnailLink;
 		expect(getResult).toStrictEqual(aTxt);
 	});
 

@@ -1,0 +1,20 @@
+@import 'the-new-css-reset/css/reset.css';
+@import './a11y.less';
+
+:root {
+	--uno: 'bgfg-main';
+
+	@import './themes/default.less';
+
+	&.breeze {
+		@import './themes/breeze.less';
+	}
+
+	&.github {
+		@import './themes/github.less';
+	}
+
+	&.solarized {
+		@import './themes/solarized.less';
+	}
+}
