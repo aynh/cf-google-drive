@@ -11,7 +11,7 @@ export const handle = (async ({ event, resolve }) => {
 		// thumbnail requests
 		if (event.url.searchParams.has('thumbnail')) {
 			return handleThumbnail(event);
-		} else if (event.locals.pathValue.mimeType !== GOOGLE_DRIVE_V3_FOLDER_MIME) {
+		} else if (event.locals.pathValue?.mimeType !== GOOGLE_DRIVE_V3_FOLDER_MIME) {
 			// return the "file" if current path is not a folder
 			return handleDownload(event);
 		}

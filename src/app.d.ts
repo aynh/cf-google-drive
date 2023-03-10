@@ -9,7 +9,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			token: string;
-			pathValue: FileResource;
+			pathValue?: FileResource;
 		}
 		// interface PageData {}
 		interface Platform {

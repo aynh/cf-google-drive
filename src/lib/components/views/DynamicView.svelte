@@ -33,10 +33,8 @@
 	});
 </script>
 
-<div class="border border-solid bgfg-main">
-	{#await componentPromise}
-		<Spinner text="Loading component" />
-	{:then component}
-		<svelte:component this={component} {promise} />
-	{/await}
-</div>
+{#await componentPromise}
+	<Spinner text="Loading component" />
+{:then component}
+	<svelte:component this={component} {promise} />
+{/await}

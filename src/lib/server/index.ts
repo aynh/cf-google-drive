@@ -38,6 +38,10 @@ export const fetchToken = async ({ platform }: RequestEvent) => {
 };
 
 export const handleDownload = async ({ locals: { pathValue, token }, request }: RequestEvent) => {
+	if (pathValue === undefined) {
+		throw error(404);
+	}
+
 	const range = request.headers.get('range') ?? undefined;
 	const { content, ...response } = await download(token, pathValue.id, range);
 
@@ -67,7 +71,7 @@ export const handleDownload = async ({ locals: { pathValue, token }, request }: 
 };
 
 export const handleThumbnail = async ({ locals: { pathValue, token } }: RequestEvent) => {
-	if (pathValue.thumbnailLink === undefined) {
+	if (pathValue?.thumbnailLink === undefined) {
 		throw error(404);
 	}
 
@@ -93,11 +97,5 @@ export const resolvePathValue = async ({ url, locals: { token } }: RequestEvent)
 		return get(token, root);
 	}
 
-	const resolved = await resolve(token, root, url.pathname);
-
-	if (resolved === undefined) {
-		throw error(404);
-	}
-
-	return resolved;
+	return resolve(token, root, url.pathname);
 };

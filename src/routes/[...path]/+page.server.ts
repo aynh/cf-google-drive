@@ -8,6 +8,9 @@ import type { PageServerLoad } from './$types';
 
 export const load = (async ({ locals, params }) => {
 	params.path; // depends(params.path)
+	if (locals.pathValue === undefined) {
+		throw error(404);
+	}
 
 	try {
 		// format date into something like "29 Jan 2023, 19:51"
