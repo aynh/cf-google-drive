@@ -4,7 +4,13 @@
 	import { url } from './stores/state';
 
 	$: ({ origin, pathname } = $url);
-	$: paths = [origin, ...pathname.split('/').slice(1)];
+	$: paths = [
+		origin,
+		...pathname
+			.split('/')
+			.slice(1)
+			.filter((it) => it !== ''),
+	];
 	$: title = decodeURIComponent(pathname === '/' ? origin : pathname.slice(1));
 
 	const { setDropdown, setDropdownToggle, show } = dropdown({
