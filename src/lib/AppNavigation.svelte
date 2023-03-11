@@ -34,7 +34,7 @@
 					<li class="w-full">
 						<a
 							{href}
-							style:padding-left="{index}rem"
+							style:padding-left="{index % 4}rem"
 							class="flex items-center justify-around break-words py-2"
 						>
 							<div class:i-lucide-home={index === 0} class="w-8 h-8 i-lucide-folder" />
