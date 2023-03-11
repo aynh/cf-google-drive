@@ -28,17 +28,25 @@ export const load = (async ({ locals, params }) => {
 		return {
 			items: {
 				promise: list(locals.token, locals.pathValue.id).then((values) => {
-					return values.map(({ mimeType, modifiedTime, size: size_, name, thumbnailLink }) => {
-						const hasThumbnail = thumbnailLink !== undefined;
-						const modified = format(new Date(modifiedTime));
-						const size = Number(size_);
-						const type =
-							mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME
-								? FileType.folder
-								: resolveFileType({ name, mimeType });
+					return values.map(
+						({ imageMediaMetadata, mimeType, modifiedTime, size: size_, name, thumbnailLink }) => {
+							const modified = format(new Date(modifiedTime));
+							const size = Number(size_);
+							const type =
+								mimeType === GOOGLE_DRIVE_V3_FOLDER_MIME
+									? FileType.folder
+									: resolveFileType({ name, mimeType });
 
-						return compact({ hasThumbnail, modified, name, size, type });
-					});
+							let thumbnail: Parameters<typeof compact>[0]['thumbnail'] =
+								thumbnailLink !== undefined;
+							if (thumbnail && imageMediaMetadata !== undefined) {
+								const { height, width, rotation } = imageMediaMetadata;
+								thumbnail = rotation % 2 === 0 ? [height, width] : [width, height];
+							}
+
+							return compact({ modified, name, size, type, thumbnail });
+						},
+					);
 				}),
 			},
 		};

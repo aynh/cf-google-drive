@@ -48,6 +48,10 @@
 	}
 
 	.view {
+		&.gallery {
+			--uno: 'i-lucide-image';
+		}
+
 		&.grid {
 			--uno: 'i-lucide-layout-grid';
 		}

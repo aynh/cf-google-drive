@@ -4,6 +4,7 @@ import { git } from '$lib/constants';
 import { derived, writable, type Readable } from 'svelte/store';
 
 export enum ViewKind {
+	gallery,
 	grid,
 	table,
 }

@@ -3,7 +3,7 @@ import type { FileValue } from '$lib/types';
 type ServerFileValue = Omit<FileValue, 'href'>;
 
 interface ServerFileValueMap {
-	0: 'hasThumbnail';
+	0: 'thumbnail';
 	1: 'name';
 	2: 'modified';
 	3: 'size';
@@ -15,15 +15,15 @@ export type CompactFileValue = {
 };
 
 export const compact = ({
-	hasThumbnail,
+	thumbnail,
 	modified,
 	name,
 	size,
 	type,
 }: ServerFileValue): CompactFileValue => {
-	return [hasThumbnail, modified, name, size, type];
+	return [thumbnail, modified, name, size, type];
 };
 
 export const decompact = (c: CompactFileValue): ServerFileValue => {
-	return { hasThumbnail: c[0], modified: c[1], name: c[2], size: c[3], type: c[4] };
+	return { thumbnail: c[0], modified: c[1], name: c[2], size: c[3], type: c[4] };
 };

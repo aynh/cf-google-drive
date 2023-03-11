@@ -10,6 +10,8 @@
 	// prevent "flash" when cycling between views
 	let loaded: { [key in ViewKind]?: ViewComponent } = {};
 	const importMap: Record<ViewKind, () => Promise<ViewComponent>> = {
+		[ViewKind.gallery]: () =>
+			import('./GalleryView.svelte').then((it) => (loaded[ViewKind.gallery] = it.default)),
 		[ViewKind.grid]: () =>
 			import('./GridView.svelte').then((it) => (loaded[ViewKind.grid] = it.default)),
 		[ViewKind.table]: () =>

@@ -2,11 +2,23 @@ export const GOOGLE_DRIVE_V3_FOLDER_MIME = 'application/vnd.google-apps.folder';
 
 export const GOOGLE_DRIVE_V3_FILES_URL = 'https://www.googleapis.com/drive/v3/files/';
 export const GOOGLE_DRIVE_V3_FILES_FIELDS =
-	'id, name, modifiedTime, mimeType, parents, size, thumbnailLink';
+	'id, imageMediaMetadata(height, width, rotation), name, modifiedTime, mimeType, parents, size, thumbnailLink';
 
 export interface FileResource {
 	/** The ID of the file. */
 	id: string;
+
+	/** Additional metadata about image media, if available. */
+	imageMediaMetadata?: {
+		/** The height of the image in pixels. */
+		height: number;
+
+		/** The width of the image in pixels. */
+		width: number;
+
+		/** The number of clockwise 90 degree rotations applied from the image's original orientation. */
+		rotation: number;
+	};
 
 	/** The name of the file. This is not necessarily unique within a folder. */
 	name: string;
