@@ -1,25 +1,24 @@
 <script lang="ts">
 	import { navigating } from '$app/stores';
+	import GenericFluid from './GenericFluid.svelte';
 
 	export let tag = 'div';
 	export let text: string | undefined = undefined;
 	$: default_ = $navigating ? 'Loading page' : 'Loading data';
 </script>
 
-<svelte:element this={tag} class="relative h-65vh">
-	<div class="absolute-center flex flex-col items-center">
-		<div class="spinner" />
-		<span class="mt-4">{text ?? default_}</span>
-	</div>
-</svelte:element>
+<GenericFluid {tag}>
+	<div class="spinner" />
+	<span slot="text">{text ?? default_}</span>
+</GenericFluid>
 
 <style>
 	/* taken from https://loading.io/css/ */
 	.spinner {
 		display: inline-block;
 		position: relative;
-		width: 160px;
-		height: 160px;
+		width: 160px !important;
+		height: 160px !important;
 	}
 
 	.spinner:after {

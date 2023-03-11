@@ -1,10 +1,10 @@
 <script lang="ts">
+	import GenericFluid from './GenericFluid.svelte';
+
 	export let tag = 'div';
 </script>
 
-<svelte:element this={tag} class="relative h-65vh">
-	<div class="absolute-center flex flex-col items-center">
-		<div class="i-lucide-citrus w-32 h-32" />
-		<span class="mt-4"> This folder is empty. </span>
-	</div>
-</svelte:element>
+<GenericFluid {tag}>
+	<div class="i-lucide-citrus" />
+	<span slot="text">This folder is empty.</span>
+</GenericFluid>

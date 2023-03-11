@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import GenericFluid from '$lib/components/GenericFluid.svelte';
 </script>
 
-<div class="relative h-65vh">
-	<div class="absolute-center flex flex-col items-center">
-		<div class="i-lucide-slash w-32 h-32 text-red" />
-		<span class="mt-4"> {$page.status} | {$page.error?.message} </span>
-	</div>
-</div>
+<GenericFluid>
+	<div class="i-lucide-slash text-red" />
+	<span slot="text" class="text-red">{$page.status} | {$page.error?.message}</span>
+</GenericFluid>
