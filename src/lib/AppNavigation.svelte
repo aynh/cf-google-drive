@@ -43,7 +43,7 @@
 							style:padding-left="{index % 4}rem"
 							class="flex items-center justify-around break-words py-2"
 						>
-							<div class:i-lucide-home={index === 0} class="w-8 h-8 i-lucide-folder" />
+							<div class="icon w-8 h-8" />
 							<span class="break-words w-[calc(100%-4rem)]">
 								{decodeURIComponent(part)}
 							</span>
@@ -54,3 +54,19 @@
 		</nav>
 	{/if}
 </div>
+
+<style lang="less">
+	:global(.icon) {
+		li & {
+			--uno: '!w-8 !h-8 i-lucide-folder-up';
+		}
+
+		li:first-child & {
+			--uno: 'i-lucide-home';
+		}
+
+		li:last-child & {
+			--uno: 'i-lucide-folder';
+		}
+	}
+</style>
