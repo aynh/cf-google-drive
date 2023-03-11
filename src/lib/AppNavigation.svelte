@@ -5,7 +5,7 @@
 
 	$: ({ origin, pathname } = $url);
 	$: paths = [origin, ...pathname.split('/').slice(1, -1)];
-	$: title = decodeURIComponent(pathname === '/' ? origin : pathname);
+	$: title = decodeURIComponent(pathname === '/' ? origin : pathname.slice(1));
 
 	const { setDropdown, setDropdownToggle, show } = dropdown({
 		middleware: [offset({ mainAxis: 1, crossAxis: 6 }), shift({ padding: 8 })],
