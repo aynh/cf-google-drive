@@ -14,7 +14,7 @@
 	};
 </script>
 
-<div class="{$$props.class} relative flex justify-evenly py-1 md:py-1.5 lg:py-2">
+<div class="{$$props.class} relative flex justify-end md:justify-evenly md:py-1.5 lg:py-2">
 	{#each items as [type, values]}
 		{@const kind = type === 'theme' ? ThemeKind : ViewKind}
 		<AppToggleStateDropdown name={type}>
